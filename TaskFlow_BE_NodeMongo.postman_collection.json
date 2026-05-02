@@ -1,0 +1,442 @@
+{
+  "info": {
+    "_postman_id": "4ac858f3-4174-4e29-92c1-cbb88fff23ac",
+    "name": "TaskFlow_BE_NodeMongo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3446538"
+  },
+  "item": [
+    {
+      "name": "Create ticket",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"Second Subject\",\r\n    \"description\": \"Second description of the ticket\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/tickets",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Create ticket - success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subject\": \"First Subject\",\r\n    \"description\": \"First description of the ticket\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/tickets",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "144"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"90-L4JFNe9PNXJ1GqTF0mqKZ701DII\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 02 May 2026 15:37:42 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"subject\": \"First Subject\",\n        \"description\": \"First description of the ticket\",\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get all tickets",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3001/api/tickets",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get all tickets - success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/api/tickets",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "146"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"92-pe3nB0Y6jUgsKLIibLKTNPivb30\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 02 May 2026 15:38:45 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"_id\": \"69f61a46b5c27a04f362945f\",\n            \"subject\": \"First Subject\",\n            \"description\": \"First description of the ticket\",\n            \"__v\": 0\n        }\n    ],\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get ticket by ID",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets",
+            "69f61a46b5c27a04f362945f"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get ticket by ID - success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets",
+                "69f61a46b5c27a04f362945f"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "144"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"90-yPp1Z94WDQjPeHsVl2k7GqLpYP4\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 02 May 2026 15:40:20 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"subject\": \"First Subject\",\n        \"description\": \"First description of the ticket\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Update entire ticket",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\": \"First Subject\",\r\n    \"description\": \"Modified first description of the ticket\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets",
+            "69f61a46b5c27a04f362945f"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Update entire ticket - success",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subject\": \"First Subject\",\r\n    \"description\": \"Modified first description of the ticket\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets",
+                "69f61a46b5c27a04f362945f"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "144"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"90-yPp1Z94WDQjPeHsVl2k7GqLpYP4\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 02 May 2026 15:42:14 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"subject\": \"First Subject\",\n        \"description\": \"First description of the ticket\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete ticket by ID",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets",
+            "69f61a46b5c27a04f362945f"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Delete ticket by ID - success",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets",
+                "69f61a46b5c27a04f362945f"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "153"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"99-58ovO+i+AfI6/I1wedPf+Scuuy8\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 02 May 2026 15:44:03 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"subject\": \"First Subject\",\n        \"description\": \"Modified first description of the ticket\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    }
+  ]
+}
