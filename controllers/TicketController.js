@@ -3,7 +3,7 @@ const ticketService = require("../services/TicketServices");
 exports.getAllTickets = async (req, res) => {
   try {
     const tickets = await ticketService.getAllTickets();
-    res.json({ data: tickets, status: "success" });
+    res.json({ data: tickets, status: "successful" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
