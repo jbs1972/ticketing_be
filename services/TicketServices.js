@@ -12,7 +12,7 @@ exports.getTicketById = async (id) => {
 };
 
 exports.updateTicket = async (id, ticket) => {
-  return await TicketModel.findByIdAndUpdate(id, ticket);
+  return await TicketModel.findByIdAndUpdate(id, ticket, { new: true, runValidators: true });
 };
 
 exports.deleteTicket = async (id) => {

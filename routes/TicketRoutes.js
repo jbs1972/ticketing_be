@@ -7,9 +7,14 @@ const {
   deleteTicket,
 } = require("../controllers/TicketController");
 
+const {
+  validateCreateTicketMiddleware,
+  validateUpdateTicketMiddleware,
+} = require("../validations/ticketValidation");
+
 const router = express.Router();
 
-router.route("/").get(getAllTickets).post(createTicket);
-router.route("/:id").get(getTicketById).put(updateTicket).delete(deleteTicket);
+router.route("/").get(getAllTickets).post(validateCreateTicketMiddleware, createTicket);
+router.route("/:id").get(getTicketById).put(validateUpdateTicketMiddleware, updateTicket).delete(deleteTicket);
 
 module.exports = router;
