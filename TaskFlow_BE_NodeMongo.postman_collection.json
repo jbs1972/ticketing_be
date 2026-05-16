@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "4ac858f3-4174-4e29-92c1-cbb88fff23ac",
+    "_postman_id": "dfbb60fd-7cbd-402d-9b5d-3fc3a3bda140",
     "name": "TaskFlow_BE_NodeMongo",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "3446538"
+    "_exporter_id": "50578256",
+    "_collection_link": "https://go.postman.co/collection/50578256-dfbb60fd-7cbd-402d-9b5d-3fc3a3bda140?source=collection_link"
   },
   "item": [
     {
@@ -16,7 +17,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"Second Subject\",\r\n    \"description\": \"Second description of the ticket\"\r\n}",
+          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Second Subject\",\r\n//     \"description\": \"Second description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"\",\r\n//     \"description\": \"Third description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"Third Subject\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -66,7 +67,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "X-Powered-By",
@@ -144,7 +145,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "X-Powered-By",
@@ -189,7 +190,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "raw": "http://localhost:3001/api/tickets/6a088953da335a33676d206b",
           "protocol": "http",
           "host": [
             "localhost"
@@ -198,7 +199,7 @@
           "path": [
             "api",
             "tickets",
-            "69f61a46b5c27a04f362945f"
+            "6a088953da335a33676d206b"
           ]
         }
       },
@@ -224,7 +225,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "X-Powered-By",
@@ -322,7 +323,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "X-Powered-By",
@@ -402,7 +403,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "X-Powered-By",
