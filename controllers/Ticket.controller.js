@@ -1,4 +1,4 @@
-const ticketService = require("../services/TicketServices");
+const ticketService = require("../services/Ticket.service");
 const { sendSuccess, sendError } = require("../utils/responseFormatter");
 
 exports.getAllTickets = async (req, res) => {

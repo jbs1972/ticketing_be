@@ -2,11 +2,11 @@
   "name": "ticketing_be",
   "version": "1.0.0",
   "description": "Task management software via ticketing",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=dev nodemon app.js",
+    "uat": "cross-env NODE_ENV=uat nodemon app.js",
+    "prod": "cross-env NODE_ENV=prod node app.js"
   },
   "repository": {
     "type": "git",
@@ -24,11 +24,18 @@
   },
   "homepage": "https://github.com/jbs1972/ticketing_be#readme",
   "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "joi": "18.2.1",
     "mongoose": "^9.6.1",
-    "joi": "18.2.1"
+    "morgan": "^1.10.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.14"
   }
 }

@@ -1,4 +1,4 @@
-const TicketModel = require("../models/Ticket");
+const TicketModel = require("../models/Ticket.model");
 
 exports.getAllTickets = async () => {
   return await TicketModel.find();
