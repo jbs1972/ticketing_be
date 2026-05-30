@@ -15,6 +15,17 @@ exports.updateTicket = async (id, ticket) => {
   return await TicketModel.findByIdAndUpdate(id, ticket, { new: true, runValidators: true });
 };
 
+exports.patchTicket = async (id, patchData) => {
+  return await TicketModel.findByIdAndUpdate(
+    id,
+    { $set: patchData },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+};
+
 exports.deleteTicket = async (id) => {
   return await TicketModel.findByIdAndDelete(id);
 };

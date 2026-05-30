@@ -54,6 +54,21 @@ const updateTicketSchema = Joi.object({
   "object.min": "At least one field must be provided for update",
 });
 
+/*
+|--------------------------------------------------------------------------
+| Partial Update Validation (PATCH)
+|--------------------------------------------------------------------------
+*/
+const patchTicketSchema = Joi.object({
+  subject: Joi.string()
+    .min(5)
+    .max(100),
+
+  description: Joi.string()
+    .min(10)
+    .max(1000),
+}).min(1);
+
 /**
  * Validate create ticket request
  */
@@ -102,9 +117,23 @@ const validateUpdateTicketMiddleware = (req, res, next) => {
   next();
 };
 
+const validatePatchTicketMiddleware = (req, res, next) => {
+  const { error } = patchTicketSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   validateCreateTicket,
   validateUpdateTicket,
   validateCreateTicketMiddleware,
   validateUpdateTicketMiddleware,
+  validatePatchTicketMiddleware,
 };

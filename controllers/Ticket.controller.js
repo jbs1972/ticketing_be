@@ -43,6 +43,28 @@ exports.updateTicket = async (req, res) => {
   }
 };
 
+exports.patchTicket = async (req, res) => {
+  try {
+    const ticket = await ticketService.patchTicket(
+      req.params.id,
+      req.body
+    );
+
+    if (!ticket) {
+      return sendError(res, "Ticket not found", null, 404);
+    }
+
+    sendSuccess(
+      res,
+      "Ticket partially updated successfully",
+      ticket,
+      200
+    );
+  } catch (err) {
+    sendError(res, "Failed to update ticket", err, 500);
+  }
+};
+
 exports.deleteTicket = async (req, res) => {
   try {
     const ticket = await ticketService.deleteTicket(req.params.id);

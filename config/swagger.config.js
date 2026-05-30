@@ -139,6 +139,25 @@ const options = {
           },
         },
 
+        TicketPatchRequest: {
+          type: "object",
+          properties: {
+            subject: {
+              type: "string",
+              minLength: 5,
+              maxLength: 100,
+            },
+            description: {
+              type: "string",
+              minLength: 10,
+              maxLength: 1000,
+            },
+          },
+          example: {
+            subject: "Updated Subject",
+          },
+        },
+
         SuccessResponse: {
           type: "object",
 
