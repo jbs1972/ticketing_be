@@ -16,7 +16,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Second Subject\",\r\n//     \"description\": \"Second description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Third Subject\",\r\n//     \"description\": \"Third description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"Forth Subject\",\r\n    \"description\": \"Forth description of the ticket\"\r\n}",
+          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Second Subject\",\r\n//     \"description\": \"Second description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Third Subject\",\r\n//     \"description\": \"Third description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Forth Subject\",\r\n//     \"description\": \"Forth description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"No subject input box\",\r\n    \"description\": \"Subject input box is not showing on chrome browser\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -44,7 +44,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"subject\": \"First Subject\",\r\n    \"description\": \"First description of the ticket\"\r\n}",
+              "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Second Subject\",\r\n//     \"description\": \"Second description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Third Subject\",\r\n//     \"description\": \"Third description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Forth Subject\",\r\n//     \"description\": \"Forth description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"No subject input box\",\r\n    \"description\": \"Subject input box is not showing on chrome browser\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -64,13 +64,61 @@
               ]
             }
           },
-          "status": "OK",
-          "code": 200,
+          "status": "Created",
+          "code": 201,
           "_postman_previewlanguage": null,
           "header": [
             {
-              "key": "X-Powered-By",
-              "value": "Express"
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
             },
             {
               "key": "Content-Type",
@@ -78,15 +126,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "144"
+              "value": "274"
             },
             {
               "key": "ETag",
-              "value": "W/\"90-L4JFNe9PNXJ1GqTF0mqKZ701DII\""
+              "value": "W/\"112-M6OgxtVhpPIGRiExZjPdtqScQnI\""
             },
             {
               "key": "Date",
-              "value": "Sat, 02 May 2026 15:37:42 GMT"
+              "value": "Sat, 30 May 2026 15:30:28 GMT"
             },
             {
               "key": "Connection",
@@ -98,7 +146,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n    \"data\": {\n        \"subject\": \"First Subject\",\n        \"description\": \"First description of the ticket\",\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+          "body": "{\n    \"message\": \"Ticket created successfully\",\n    \"data\": {\n        \"subject\": \"No subject input box\",\n        \"description\": \"Subject input box is not showing on chrome browser\",\n        \"_id\": \"6a1b0294794d5dd49c84331b\",\n        \"createdAt\": \"2026-05-30T15:30:28.437Z\",\n        \"updatedAt\": \"2026-05-30T15:30:28.437Z\"\n    },\n    \"status\": 201\n}"
         }
       ]
     },
@@ -261,6 +309,149 @@
       ]
     },
     {
+      "name": "Update partial ticket",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"description\": \"Third description of the ticket\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/tickets/69f61f3ef52ee617d4ebff20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "tickets",
+            "69f61f3ef52ee617d4ebff20"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Update partial ticket - success",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"We are suffuring from slow application performance\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/tickets/69f61f3ef52ee617d4ebff20",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "tickets",
+                "69f61f3ef52ee617d4ebff20"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "250"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"fa-EACDns86b2POBL+QOLSWhZhZN9U\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 30 May 2026 15:33:03 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Ticket partially updated successfully\",\n    \"data\": {\n        \"_id\": \"69f61f3ef52ee617d4ebff20\",\n        \"subject\": \"The application is running very slow\",\n        \"description\": \"Third description of the ticket\",\n        \"__v\": 0,\n        \"updatedAt\": \"2026-05-30T15:33:03.737Z\"\n    },\n    \"status\": 200\n}"
+        }
+      ]
+    },
+    {
       "name": "Update entire ticket",
       "request": {
         "auth": {
@@ -367,7 +558,7 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "raw": "http://localhost:3001/api/tickets/6a0899d43186da09bfbf1a60",
           "protocol": "http",
           "host": [
             "localhost"
@@ -376,7 +567,7 @@
           "path": [
             "api",
             "tickets",
-            "69f61a46b5c27a04f362945f"
+            "6a0899d43186da09bfbf1a60"
           ]
         }
       },
@@ -437,36 +628,6 @@
           "body": "{\n    \"data\": {\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"subject\": \"First Subject\",\n        \"description\": \"Modified first description of the ticket\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
         }
       ]
-    },
-    {
-      "name": "Update partial ticket",
-      "request": {
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"subject\": \"The application is running very slow\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61f3ef52ee617d4ebff20",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "3001",
-          "path": [
-            "api",
-            "tickets",
-            "69f61f3ef52ee617d4ebff20"
-          ]
-        }
-      },
-      "response": []
     }
   ]
 }
