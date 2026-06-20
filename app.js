@@ -3,6 +3,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 
+const authRoutes = require("./routes/Auth.routes");
+const userRoutes = require("./routes/User.routes");
+
 const config = require("./config/env.config");
 
 const swaggerUi = require("swagger-ui-express");
@@ -114,6 +117,14 @@ app.get("/", (req, res) => {
 app.use(
   `${config.apiPrefix}/tickets`,
   ticketRoutes
+);
+app.use(
+  `${config.apiPrefix}/auth`,
+  authRoutes
+);
+app.use(
+  `${config.apiPrefix}/users`,
+  userRoutes
 );
 
 /*

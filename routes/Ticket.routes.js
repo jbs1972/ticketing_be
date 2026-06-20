@@ -1,4 +1,6 @@
 const express = require("express");
+const auth = require("../middleware/Auth.middleware");
+const admin = require("../middleware/Admin.middleware");
 const {
   getAllTickets,
   createTicket,
@@ -170,6 +172,6 @@ const router = express.Router();
  */
 
 router.route("/").get(getAllTickets).post(validateCreateTicketMiddleware, createTicket);
-router.route("/:id").get(getTicketById).put(validateUpdateTicketMiddleware, updateTicket).patch(validatePatchTicketMiddleware, patchTicket).delete(deleteTicket);
+router.route("/:id").get(getTicketById).put(validateUpdateTicketMiddleware, updateTicket).patch(validatePatchTicketMiddleware, patchTicket).delete([auth, admin], deleteTicket);
 
 module.exports = router;
