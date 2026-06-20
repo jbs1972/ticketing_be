@@ -237,7 +237,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "raw": "http://localhost:3001/api/tickets/6a1afa518fb2855321f20228",
           "protocol": "http",
           "host": [
             "localhost"
@@ -246,7 +246,7 @@
           "path": [
             "api",
             "tickets",
-            "69f61a46b5c27a04f362945f"
+            "6a1afa518fb2855321f20228"
           ]
         }
       },
@@ -626,6 +626,292 @@
           ],
           "cookie": [],
           "body": "{\n    \"data\": {\n        \"_id\": \"69f61a46b5c27a04f362945f\",\n        \"subject\": \"First Subject\",\n        \"description\": \"Modified first description of the ticket\",\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Add new user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Barun Dutta\",\r\n    \"email\": \"barun.dutta@yopmail.com\",\r\n    \"password\": \"Barun@1234\",\r\n    \"isAdmin\": \"true\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Add new user - success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Arun Sen\",\r\n    \"email\": \"arun.sen@yopmail.com\",\r\n    \"password\": \"Arun@1234\",\r\n    \"isAdmin\": \"false\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "x-auth-token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTM2YjUyYjliYTJhNmRkNzhkOTgwYjMiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzgxOTcwMjE5fQ.Z6HCQ7N2MgscMkBFlgko3l58fznJDnGKWhQu-1zLAxQ"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "152"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"98-/tjivLQWYNXTZIcPlc2U9naB6HM\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 20 Jun 2026 15:43:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User registered successfully\",\n    \"data\": {\n        \"_id\": \"6a36b52b9ba2a6dd78d980b3\",\n        \"name\": \"Arun Sen\",\n        \"email\": \"arun.sen@yopmail.com\"\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login authentication",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\"\r\n// }\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }\r\n{\r\n    \"email\": \"barun.dutta@yopmail.com\",\r\n    \"password\": \"Barun@1234\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/auth",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "auth"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Login authentication - success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\",\r\n    \"password\": \"Jayanta@1234\"\r\n}\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/auth",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "238"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"ee-A0n1vfRtLdxRwVFBAEeUq070DDE\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 20 Jun 2026 15:43:54 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTM2YjIwYmYxNTVjOGIwNzNmMGE0ZmYiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3ODE5NzAyMzR9.UBwM9owviNfZjR3sKjuSfMie7D62z2p8xeu1LtNvQTw\"\n    },\n    \"status\": \"success\"\n}"
         }
       ]
     }
