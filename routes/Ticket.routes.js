@@ -29,9 +29,11 @@ const router = express.Router();
  * @swagger
  * /tickets:
  *   get:
- *     summary: Get all tickets
- *     description: Retrieve a list of all tickets in the system
+ *     summary: Get all tickets (Admin and User)
+ *     description: Retrieve a list of all tickets in the system. Requires authentication.
  *     tags: [Tickets]
+ *     security:
+ *       - TokenAuth: []
  *     responses:
  *       200:
  *         description: Tickets fetched successfully
@@ -50,15 +52,21 @@ const router = express.Router();
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       400:
+ *         description: Invalid token
  */
 
 /**
  * @swagger
  * /tickets:
  *   post:
- *     summary: Create new ticket
- *     description: Create a new support ticket
+ *     summary: Create new ticket (Admin only)
+ *     description: Create a new support ticket. Requires admin access.
  *     tags: [Tickets]
+ *     security:
+ *       - TokenAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -83,15 +91,21 @@ const router = express.Router();
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       403:
+ *         description: Forbidden - Admin access required
  */
 
 /**
  * @swagger
  * /tickets/{id}:
  *   get:
- *     summary: Get ticket by ID
- *     description: Retrieve a specific ticket by its ID
+ *     summary: Get ticket by ID (Admin and User)
+ *     description: Retrieve a specific ticket by its ID. Requires authentication.
  *     tags: [Tickets]
+ *     security:
+ *       - TokenAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -115,6 +129,10 @@ const router = express.Router();
  *                   example: "success"
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       400:
+ *         description: Invalid token
  *       404:
  *         description: Ticket not found
  */
@@ -123,9 +141,11 @@ const router = express.Router();
  * @swagger
  * /tickets/{id}:
  *   put:
- *     summary: Update ticket (full replacement)
- *     description: Replace all fields of a ticket with new values
+ *     summary: Update ticket (Admin only)
+ *     description: Replace all fields of a ticket with new values. Requires admin access.
  *     tags: [Tickets]
+ *     security:
+ *       - TokenAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -157,6 +177,10 @@ const router = express.Router();
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       403:
+ *         description: Forbidden - Admin access required
  *       404:
  *         description: Ticket not found
  */
@@ -165,9 +189,11 @@ const router = express.Router();
  * @swagger
  * /tickets/{id}:
  *   patch:
- *     summary: Partially update a ticket
- *     description: Update one or more fields of a ticket without sending the complete object
+ *     summary: Partially update a ticket (Admin and User)
+ *     description: Update one or more fields of a ticket without sending the complete object. Requires authentication.
  *     tags: [Tickets]
+ *     security:
+ *       - TokenAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -213,6 +239,8 @@ const router = express.Router();
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Unauthorized - No token provided
  *       404:
  *         description: Ticket not found
  */
@@ -244,7 +272,7 @@ const router = express.Router();
  *         description: Ticket not found
  */
 
-router.route("/").get(getAllTickets).post(validateCreateTicketMiddleware, createTicket);
-router.route("/:id").get(getTicketById).put(validateUpdateTicketMiddleware, updateTicket).patch(validatePatchTicketMiddleware, patchTicket).delete([auth, admin], deleteTicket);
+router.route("/").get(auth, getAllTickets).post(auth, admin, validateCreateTicketMiddleware, createTicket);
+router.route("/:id").get(auth, getTicketById).put(auth, admin, validateUpdateTicketMiddleware, updateTicket).patch(auth, validatePatchTicketMiddleware, patchTicket).delete(auth, admin, deleteTicket);
 
 module.exports = router;
