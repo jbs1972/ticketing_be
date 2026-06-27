@@ -633,10 +633,16 @@
       "name": "Add new user",
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Barun Dutta\",\r\n    \"email\": \"barun.dutta@yopmail.com\",\r\n    \"password\": \"Barun@1234\",\r\n    \"isAdmin\": \"true\"\r\n}",
+          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Barun Dutta\",\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n{\r\n    \"name\": \"Kiran Sarkar\",\r\n    \"email\": \"kiran.sarkar@yopmail.com\",\r\n    \"password\": \"Kiran@1234\",\r\n    \"isAdmin\": \"false\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -781,7 +787,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\"\r\n// }\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }\r\n{\r\n    \"email\": \"barun.dutta@yopmail.com\",\r\n    \"password\": \"Barun@1234\"\r\n}",
+          "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\",\r\n    \"password\": \"Jayanta@1234\"\r\n}\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }\r\n// {\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\"\r\n// }",
           "options": {
             "raw": {
               "language": "json"
@@ -912,6 +918,146 @@
           ],
           "cookie": [],
           "body": "{\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTM2YjIwYmYxNTVjOGIwNzNmMGE0ZmYiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3ODE5NzAyMzR9.UBwM9owviNfZjR3sKjuSfMie7D62z2p8xeu1LtNvQTw\"\n    },\n    \"status\": \"success\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "My profile",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/api/users/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "My profile - success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "183"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"b7-dl4u178B4SDHQb9wSDumKcZF2zg\""
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 27 Jun 2026 14:44:33 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User fetched successfully\",\n    \"data\": {\n        \"_id\": \"6a36b20bf155c8b073f0a4ff\",\n        \"name\": \"Jayanta B. Sen\",\n        \"email\": \"jayanta.b.sen@yopmail.com\",\n        \"isAdmin\": true,\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
         }
       ]
     }

@@ -1,10 +1,10 @@
 const auth = require('../middleware/Auth.middleware');
+const admin = require('../middleware/Admin.middleware');
 const _ = require('lodash');
 const { User, validate } = require('../models/User.model');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-// removed unused import
 
 const SALT_ROUNDS = 12;
 
@@ -13,7 +13,7 @@ router.get('/me', auth, async (req, res) => {
     res.json({ message: 'User fetched successfully', data: users, status: 'success' });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, admin, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message, data: null, status: 'error' });
 
