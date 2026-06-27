@@ -1,50 +1,102 @@
-const auth = require('../middleware/Auth.middleware');
-const admin = require('../middleware/Admin.middleware');
-const _ = require('lodash');
-const { User, validate } = require('../models/User.model');
-const express = require('express');
+const express = require("express");
+const auth = require("../middleware/Auth.middleware");
+const admin = require("../middleware/Admin.middleware");
+const { registerUser, getCurrentUser } = require("../controllers/User.controller");
+const { validate } = require("../models/User.model");
+
 const router = express.Router();
-const bcrypt = require('bcrypt');
 
-const SALT_ROUNDS = 12;
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User Management APIs
+ */
 
-router.get('/me', auth, async (req, res) => {
-    const users = await User.findById(req.user._id).select('-password');
-    res.json({ message: 'User fetched successfully', data: users, status: 'success' });
-});
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: Get current authenticated user details
+ *     description: Retrieve the profile information of the currently authenticated user
+ *     tags: [Users]
+ *     security:
+ *       - TokenAuth: []
+ *     responses:
+ *       200:
+ *         description: User fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User fetched successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       400:
+ *         description: Invalid token
+ */
+router.get("/me", auth, getCurrentUser);
 
-router.post('/', auth, admin, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message, data: null, status: 'error' });
-
-    let user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).json({ message: 'User already registered.', data: null, status: 'error' });
-
-    // user = new User({
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     password: req.body.password
-    // });
-
-    user = new User(_.pick(req.body, ['name', 'email', 'password', 'isAdmin']));
-    const salt = await bcrypt.genSalt(SALT_ROUNDS);
-    user.password = await bcrypt.hash(user.password, salt);
-
-    await user.save();
-
-    //   res.send(user);
-
-    // res.send({
-    //     name: user.name,
-    //     email: user.email
-    // });
-    
-    // res.send(_.pick(user, ['_id', 'name', 'email']));
-
-    const token = user.getAuthToken();
-
-    // const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
-    res.header('x-auth-token', token).json({ message: 'User registered successfully', data: _.pick(user, ['_id', 'name', 'email']), status: 'success' }); 
-});
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create new user (Admin only)
+ *     description: Register a new user in the system. Only authenticated admin users can create new users.
+ *     tags: [Users]
+ *     security:
+ *       - TokenAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserRegisterRequest'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         headers:
+ *           x-auth-token:
+ *             description: JWT authentication token for the newly created user
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserRegisterResponse'
+ *       400:
+ *         description: Validation error or user already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/", auth, admin, (req, res, next) => {
+  const { error } = validate(req.body);
+  if (error) {
+    return res
+      .status(400)
+      .json({
+        message: error.details[0].message,
+        data: null,
+        status: "error",
+      });
+  }
+  next();
+}, registerUser);
 
 module.exports = router;

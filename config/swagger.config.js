@@ -10,7 +10,7 @@ const options = {
       title: "Ticket Management REST API",
       version: "1.0.0",
       description:
-        "Professional REST API for Ticket Management using Express.js and MongoDB",
+        "Professional REST API for Ticket Management using Express.js and MongoDB with JWT Authentication",
 
       contact: {
         name: "API Support",
@@ -40,7 +40,158 @@ const options = {
     ],
 
     components: {
+      securitySchemes: {
+        TokenAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "x-auth-token",
+          description: "JWT token for authentication. Send the token in the 'x-auth-token' header. Example: x-auth-token: {token}",
+        },
+      },
+
       schemas: {
+        User: {
+          type: "object",
+          required: ["name", "email", "password"],
+          properties: {
+            _id: {
+              type: "string",
+              description: "MongoDB ObjectId",
+              example: "689ad54cb72e4c0012d91f11",
+            },
+            name: {
+              type: "string",
+              description: "User full name",
+              minLength: 5,
+              maxLength: 50,
+              example: "John Doe",
+            },
+            email: {
+              type: "string",
+              description: "User email address",
+              format: "email",
+              minLength: 5,
+              maxLength: 255,
+              example: "john@example.com",
+            },
+            password: {
+              type: "string",
+              description: "User password (min 6 chars, must contain uppercase, lowercase, number, and special char #$@)",
+              minLength: 6,
+              maxLength: 20,
+              example: "Password123#",
+            },
+            isAdmin: {
+              type: "boolean",
+              description: "Admin status",
+              default: false,
+              example: false,
+            },
+          },
+        },
+
+        LoginRequest: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: {
+              type: "string",
+              format: "email",
+              example: "john@example.com",
+            },
+            password: {
+              type: "string",
+              example: "Password123#",
+            },
+          },
+        },
+
+        LoginResponse: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+              example: "Login successful",
+            },
+            status: {
+              type: "string",
+              example: "success",
+            },
+            data: {
+              type: "object",
+              properties: {
+                token: {
+                  type: "string",
+                  description: "JWT token for authentication",
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                },
+              },
+            },
+          },
+        },
+
+        UserRegisterRequest: {
+          type: "object",
+          required: ["name", "email", "password"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 5,
+              maxLength: 50,
+              example: "John Doe",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              example: "john@example.com",
+            },
+            password: {
+              type: "string",
+              description: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (#, @, or $)",
+              minLength: 6,
+              maxLength: 20,
+              example: "Password123#",
+            },
+            isAdmin: {
+              type: "boolean",
+              description: "Admin status (only admins can create users with this flag)",
+              default: false,
+              example: false,
+            },
+          },
+        },
+
+        UserRegisterResponse: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+              example: "User registered successfully",
+            },
+            status: {
+              type: "string",
+              example: "success",
+            },
+            data: {
+              type: "object",
+              properties: {
+                _id: {
+                  type: "string",
+                  example: "689ad54cb72e4c0012d91f11",
+                },
+                name: {
+                  type: "string",
+                  example: "John Doe",
+                },
+                email: {
+                  type: "string",
+                  example: "john@example.com",
+                },
+              },
+            },
+          },
+        },
+
         Ticket: {
           type: "object",
 
@@ -231,6 +382,14 @@ const options = {
     },
 
     tags: [
+      {
+        name: "Authentication",
+        description: "User authentication and login APIs",
+      },
+      {
+        name: "Users",
+        description: "User Management APIs",
+      },
       {
         name: "Tickets",
         description: "Ticket Management APIs",

@@ -30,10 +30,26 @@ const router = express.Router();
  * /tickets:
  *   get:
  *     summary: Get all tickets
+ *     description: Retrieve a list of all tickets in the system
  *     tags: [Tickets]
  *     responses:
  *       200:
  *         description: Tickets fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Tickets fetched successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
  */
 
 /**
@@ -41,6 +57,7 @@ const router = express.Router();
  * /tickets:
  *   post:
  *     summary: Create new ticket
+ *     description: Create a new support ticket
  *     tags: [Tickets]
  *     requestBody:
  *       required: true
@@ -51,6 +68,21 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Ticket created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket created successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
+ *       400:
+ *         description: Validation error
  */
 
 /**
@@ -58,6 +90,7 @@ const router = express.Router();
  * /tickets/{id}:
  *   get:
  *     summary: Get ticket by ID
+ *     description: Retrieve a specific ticket by its ID
  *     tags: [Tickets]
  *     parameters:
  *       - in: path
@@ -65,9 +98,23 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: string
+ *         description: MongoDB ticket ID
  *     responses:
  *       200:
  *         description: Ticket fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket fetched successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
  *       404:
  *         description: Ticket not found
  */
@@ -76,7 +123,8 @@ const router = express.Router();
  * @swagger
  * /tickets/{id}:
  *   put:
- *     summary: Update ticket
+ *     summary: Update ticket (full replacement)
+ *     description: Replace all fields of a ticket with new values
  *     tags: [Tickets]
  *     parameters:
  *       - in: path
@@ -84,17 +132,31 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: string
- *
+ *         description: MongoDB ticket ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TicketUpdateRequest'
- *
  *     responses:
  *       200:
  *         description: Ticket updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket updated successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
+ *       400:
+ *         description: Validation error
  *       404:
  *         description: Ticket not found
  */
@@ -104,69 +166,80 @@ const router = express.Router();
  * /tickets/{id}:
  *   patch:
  *     summary: Partially update a ticket
- *     description: Update one or more fields of a ticket without sending the complete object.
+ *     description: Update one or more fields of a ticket without sending the complete object
  *     tags: [Tickets]
- *
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: Ticket ID
- *
+ *         description: MongoDB ticket ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TicketPatchRequest'
- *
  *           examples:
  *             updateSubject:
  *               summary: Update subject only
  *               value:
  *                 subject: "Updated Ticket Subject"
- *
  *             updateDescription:
  *               summary: Update description only
  *               value:
  *                 description: "Updated ticket description text"
- *
  *             updateBoth:
  *               summary: Update both fields
  *               value:
  *                 subject: "New Subject"
  *                 description: "New Description"
- *
  *     responses:
  *       200:
  *         description: Ticket partially updated successfully
- *
- *       404:
- *         description: Ticket not found
- *
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket partially updated successfully"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Validation error
+ *       404:
+ *         description: Ticket not found
  */
 
 /**
  * @swagger
  * /tickets/{id}:
  *   delete:
- *     summary: Delete ticket
+ *     summary: Delete ticket (Admin only)
+ *     description: Delete a ticket from the system. Requires admin access.
  *     tags: [Tickets]
- *
+ *     security:
+ *       - TokenAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *
+ *         description: MongoDB ticket ID
  *     responses:
  *       204:
  *         description: Ticket deleted successfully
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       403:
+ *         description: Forbidden - Admin access required
  *       404:
  *         description: Ticket not found
  */

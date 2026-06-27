@@ -637,12 +637,13 @@
           {
             "key": "x-auth-token",
             "value": "",
-            "type": "text"
+            "type": "text",
+            "disabled": true
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Barun Dutta\",\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n{\r\n    \"name\": \"Kiran Sarkar\",\r\n    \"email\": \"kiran.sarkar@yopmail.com\",\r\n    \"password\": \"Kiran@1234\",\r\n    \"isAdmin\": \"false\"\r\n}",
+          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Barun Dutta\",\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Kiran Sarkar\",\r\n//     \"email\": \"kiran.sarkar@yopmail.com\",\r\n//     \"password\": \"Kiran@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Mala Majumdar\",\r\n    \"email\": \"mala.majumdar@yopmail.com\",\r\n    \"password\": \"Mala@1234\",\r\n    \"isAdmin\": \"false\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
