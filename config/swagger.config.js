@@ -394,6 +394,10 @@ const options = {
         name: "Tickets",
         description: "Ticket Management APIs",
       },
+      {
+        name: "Password Recovery",
+        description: "OTP-based password recovery APIs",
+      },
     ],
   },
 
