@@ -1,8 +1,10 @@
 const Joi = require("joi");
+const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const { User } = require("../models/User.model");
 const loginDetailsService = require("../services/LoginDetails.service");
 const { sendSuccess, sendError } = require("../utils/responseFormatter");
+const { generateFingerprint } = require("../utils/fingerprint");
 
 exports.loginUser = async (req, res) => {
   try {
@@ -21,13 +23,25 @@ exports.loginUser = async (req, res) => {
       return sendError(res, "Invalid email or password.", null, 400);
     }
 
+    await loginDetailsService.deactivatePreviousSessions(user._id);
+
+    const sessionId = crypto.randomUUID();
+
+    const client = generateFingerprint(req);
+
     await loginDetailsService.createLoginDetail({
       user_id: user._id,
+      session_id: sessionId,
+      ip_address: client.ipAddress,
+      browser: client.browser,
+      operating_system: client.operatingSystem,
+      device_name: client.deviceName,
+      fingerprint: client.fingerprint,
       login_time: new Date(),
       is_active: true,
     });
 
-    const token = user.getAuthToken();
+    const token = user.getAuthToken(sessionId);
     return sendSuccess(res, "Login successful", { token }, 200);
   } catch (err) {
     console.error("Login error", err);
