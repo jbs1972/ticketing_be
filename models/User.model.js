@@ -44,9 +44,11 @@ const userSchema = new mongoose.Schema({
   // roles: []
   // operations: []
 });
-userSchema.methods.getAuthToken = function() {
-    const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get("jwtPrivateKey"));
-    return token;
+userSchema.methods.getAuthToken = function(sessionId) {
+  const payload = { _id: this._id, isAdmin: this.isAdmin };
+  if (sessionId) payload.session_id = sessionId;
+  const token = jwt.sign(payload, config.get("jwtPrivateKey"));
+  return token;
 }
 const User = mongoose.model('User', userSchema);
 

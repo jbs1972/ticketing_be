@@ -21,17 +21,33 @@ exports.loginUser = async (req, res) => {
       return sendError(res, "Invalid email or password.", null, 400);
     }
 
-    await loginDetailsService.createLoginDetail({
+    const loginRecord = await loginDetailsService.createLoginDetail({
       user_id: user._id,
       login_time: new Date(),
       is_active: true,
     });
 
-    const token = user.getAuthToken();
+    const token = user.getAuthToken(loginRecord._id);
     return sendSuccess(res, "Login successful", { token }, 200);
   } catch (err) {
     console.error("Login error", err);
     return sendError(res, "Failed to login user", err, 500);
+  }
+};
+
+exports.logoutUser = async (req, res) => {
+  try {
+    const sessionId = req.user && req.user.session_id;
+    if (!sessionId) {
+      return sendError(res, "Unauthorized", null, 401);
+    }
+
+    await loginDetailsService.markLogoutBySession(sessionId);
+
+    return sendSuccess(res, "Logout successful", null, 200);
+  } catch (err) {
+    console.error("Logout error", err);
+    return sendError(res, "Failed to logout user", err, 500);
   }
 };
 
