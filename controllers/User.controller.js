@@ -1,11 +1,18 @@
 const userService = require("../services/User.service");
+const loginDetailsService = require("../services/LoginDetails.service");
 const { sendSuccess, sendError } = require("../utils/responseFormatter");
 const _ = require("lodash");
 
 exports.registerUser = async (req, res) => {
   try {
     const user = await userService.registerUser(req.body);
-    const token = user.getAuthToken();
+    const loginRecord = await loginDetailsService.createLoginDetail({
+      user_id: user._id,
+      login_time: new Date(),
+      is_active: true,
+    });
+
+    const token = user.getAuthToken(loginRecord._id);
 
     res
       .header("x-auth-token", token)

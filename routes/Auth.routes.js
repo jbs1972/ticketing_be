@@ -1,5 +1,6 @@
 const express = require("express");
-const { loginUser } = require("../controllers/Auth.controller");
+const { loginUser, logoutUser } = require("../controllers/Auth.controller");
+const auth = require("../middleware/Auth.middleware");
 const router = express.Router();
 
 /**
@@ -37,5 +38,21 @@ const router = express.Router();
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.post("/", loginUser);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout the current user
+ *     tags: [Authentication]
+ *     security:
+ *       - TokenAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *       401:
+ *         description: Unauthorized - No token provided
+ */
+router.post("/logout", auth, logoutUser);
 
 module.exports = router;

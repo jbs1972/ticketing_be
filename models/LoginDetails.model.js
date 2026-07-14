@@ -3,16 +3,49 @@ const Schema = mongoose.Schema;
 
 const loginDetailsSchema = new Schema(
   {
+    // User Information
     user_id: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User ID is required"],
     },
+
+    // Session Information
     session_id: {
       type: String,
-      required: [true, "Session ID is required"],
+      required: true,
       unique: true,
     },
+
+    login_time: {
+      type: Date,
+      required: [true, "Login time is required"],
+      default: Date.now,
+    },
+
+    logout_time: {
+      type: Date,
+      default: null,
+    },
+
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
+
+    logout_reason: {
+      type: String,
+      enum: [
+        "Manual Logout",
+        "New Login",
+        "Session Expired",
+        "Admin Logout",
+        "Unknown",
+      ],
+      default: "Unknown",
+    },
+
+    // Client Information
     ip_address: {
       type: String,
       default: null,
@@ -37,36 +70,11 @@ const loginDetailsSchema = new Schema(
       type: String,
       default: null,
     },
-    login_time: {
-      type: Date,
-      required: [true, "Login time is required"],
-      default: Date.now,
-    },
-    logout_time: {
-      type: Date,
-    },
-    is_active: {
-      type: Boolean,
-      required: [true, "Active status is required"],
-      default: true,
-    },
-    last_seen: {
-      type: Date,
-      default: Date.now,
-    },
-    logout_reason: {
-      type: String,
-      enum: [
-        "Manual Logout",
-        "New Login",
-        "Session Expired",
-        "Admin Logout",
-        "Unknown",
-      ],
-      default: "Unknown",
-    },
   },
-  { timestamps: true, versionKey: false },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
 module.exports = mongoose.model("LoginDetail", loginDetailsSchema);

@@ -1,7 +1,4 @@
-/**
- * Utility to format consistent JSON responses
- */
-
+// Utility to format consistent JSON responses
 const formatResponse = (message, data = null, statusCode = 200) => {
   return {
     message,
@@ -10,20 +7,22 @@ const formatResponse = (message, data = null, statusCode = 200) => {
   };
 };
 
-/**
- * Send a successful response
- */
+//  Send a successful response
 const sendSuccess = (res, message, data, statusCode = 200) => {
   res.status(statusCode).json(formatResponse(message, data, statusCode));
 };
 
-/**
- * Send an error response
- */
+//  Send an error response
 const sendError = (res, message, error = null, statusCode = 500) => {
-  res.status(statusCode).json(
-    formatResponse(message, error ? { error: error.message || error } : null, statusCode)
-  );
+  res
+    .status(statusCode)
+    .json(
+      formatResponse(
+        message,
+        error ? { error: error.message || error } : null,
+        statusCode,
+      ),
+    );
 };
 
 module.exports = {

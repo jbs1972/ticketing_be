@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
-// Custom password validation schema
+// Password Validation Schema
 const passwordSchema = Joi.string()
   .min(6)
   .max(20)
@@ -18,6 +18,7 @@ const passwordSchema = Joi.string()
     "any.required": "Password is required",
   });
 
+// User Schema
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -45,18 +46,17 @@ const userSchema = new mongoose.Schema({
   // roles: []
   // operations: []
 });
+//Generate JWT Token
 userSchema.methods.getAuthToken = function (sessionId) {
-  return jwt.sign(
-    {
-      _id: this._id,
-      isAdmin: this.isAdmin,
-      sessionId: sessionId,
-    },
-    config.get("jwtPrivateKey"),
-  );
+  const payload = { _id: this._id, isAdmin: this.isAdmin };
+  // Include Session Id
+  if (sessionId) payload.session_id = sessionId;
+  const token = jwt.sign(payload, config.get("jwtPrivateKey"));
+  return token;
 };
+// User Model
 const User = mongoose.model("User", userSchema);
-
+// User Validation
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
