@@ -1,24 +1,29 @@
 const LoginDetail = require("../models/LoginDetails.model");
 
-exports.createLoginDetail = async ({ user_id, login_time, logout_time,
+// Create Login Detail
+exports.createLoginDetail = async ({
+  user_id,
+  session_id,
   ip_address,
   browser,
   operating_system,
   device_name,
-  fingerprint, }) => {
+  fingerprint,
+  login_time,
+  logout_time,
+  is_active,
+}) => {
   const loginDetail = new LoginDetail({
     user_id,
+    session_id,
+    ip_address,
+    browser,
+    operating_system,
+    device_name,
+    fingerprint,
     login_time: login_time || Date.now(),
     logout_time,
-    ip_address,
-
-    browser,
-
-    operating_system,
-
-    device_name,
-
-    fingerprint,
+    is_active: typeof is_active === "boolean" ? is_active : true,
   });
 
   return await loginDetail.save();
@@ -42,14 +47,13 @@ exports.getLoginDetailsByUser = async (userId) => {
 exports.deactivatePreviousSessions = async (userId) => {
   return await LoginDetail.updateMany(
     {
-      user_id: userId
+      user_id: userId,
+      is_active: true,
     },
-
     {
       $set: {
-
+        is_active: false,
         logout_time: new Date(),
-
         logout_reason: "New Login",
       },
     },
@@ -58,44 +62,28 @@ exports.deactivatePreviousSessions = async (userId) => {
 
 // Get Active Session
 exports.getActiveSession = async (sessionId) => {
-  if (!sessionId) return null;
-
   return await LoginDetail.findOne({
-    _id: sessionId
+    session_id: sessionId,
+    is_active: true,
   });
 };
 
-// Check Session Active
-exports.isSessionActive = async (sessionId) => {
-  if (!sessionId) return false;
-
-  const session = await LoginDetail.findOne({
-    _id: sessionId,
-  });
-
-  return !!session;
-};
-
-// Logout Current Session
-exports.markLogoutForUser = async (userId) => {
-  // Find the most recent active login detail for this user and mark it logged out
-  return await LoginDetail.findOneAndUpdate(
-    { user_id: userId },
-    { $set: { logout_time: Date.now() } },
-    { sort: { login_time: -1 }, new: true }
-  );
-};
-
-exports.isUserSessionActive = async (userId) => {
-  const active = await LoginDetail.findOne({ user_id: userId, is_active: true }).sort({ login_time: -1 });
-  return !!active;
-};
-
+// Mark Logout By Session
 exports.markLogoutBySession = async (sessionId) => {
   return await LoginDetail.findOneAndUpdate(
-    { _id: sessionId },
-    { $set: { logout_time: Date.now() } },
-    { new: true }
+    {
+      session_id: sessionId,
+      is_active: true,
+    },
+    {
+      $set: {
+        logout_time: new Date(),
+        is_active: false,
+        logout_reason: "Manual Logout",
+      },
+    },
+    {
+      returnDocument: "after",
+    },
   );
-};
 };

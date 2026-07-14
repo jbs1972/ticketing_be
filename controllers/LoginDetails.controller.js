@@ -12,8 +12,15 @@ exports.getAllLoginDetails = async (req, res) => {
 
 exports.getMyLoginDetails = async (req, res) => {
   try {
-    const loginDetails = await loginDetailsService.getLoginDetailsByUser(req.user._id);
-    sendSuccess(res, "User login details fetched successfully", loginDetails, 200);
+    const loginDetails = await loginDetailsService.getLoginDetailsByUser(
+      req.user._id,
+    );
+    sendSuccess(
+      res,
+      "User login details fetched successfully",
+      loginDetails,
+      200,
+    );
   } catch (err) {
     sendError(res, "Failed to fetch user login details", err, 500);
   }
