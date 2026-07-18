@@ -4,7 +4,9 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 
 const authRoutes = require("./routes/Auth.routes");
-const userRoutes = require("./routes/User.routes");const loginDetailsRoutes = require("./routes/LoginDetails.routes");
+const userRoutes = require("./routes/User.routes");
+const loginDetailsRoutes = require("./routes/LoginDetails.routes");
+const passwordRecoveryRoutes = require("./routes/PasswordRecovery.routes");
 const config = require("./config/env.config");
 
 const swaggerUi = require("swagger-ui-express");
@@ -128,6 +130,10 @@ app.use(
 app.use(
   `${config.apiPrefix}/login-details`,
   loginDetailsRoutes
+);
+app.use(
+  `${config.apiPrefix}/password-recovery`,
+  passwordRecoveryRoutes
 );
 
 /*

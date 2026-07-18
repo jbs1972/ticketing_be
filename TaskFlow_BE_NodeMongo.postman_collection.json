@@ -1061,6 +1061,435 @@
           "body": "{\n    \"message\": \"User fetched successfully\",\n    \"data\": {\n        \"_id\": \"6a36b20bf155c8b073f0a4ff\",\n        \"name\": \"Jayanta B. Sen\",\n        \"email\": \"jayanta.b.sen@yopmail.com\",\n        \"isAdmin\": true,\n        \"__v\": 0\n    },\n    \"status\": \"success\"\n}"
         }
       ]
+    },
+    {
+      "name": "Send OTP",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/password-recovery/send-otp",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "password-recovery",
+            "send-otp"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Send OTP - ??",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/password-recovery/send-otp",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "password-recovery",
+                "send-otp"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "146"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"92-ZXdf4tUhfMXBhZ1BTlZL6+6UBHk\""
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 08 Jul 2026 08:37:52 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"OTP sent successfully to your email\",\n    \"data\": {\n        \"email\": \"jayanta.b.sen@yopmail.com\",\n        \"expiresAt\": \"2026-07-08T08:47:49.217Z\"\n    },\n    \"status\": 200\n}"
+        }
+      ]
+    },
+    {
+      "name": "Verify OTP",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/password-recovery/verify-otp",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "password-recovery",
+            "verify-otp"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Verify OTP - ??",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/password-recovery/verify-otp",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "password-recovery",
+                "verify-otp"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "64"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"40-yxp/JWP0R1HBALrixMofYUVIgBc\""
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 08 Jul 2026 08:40:14 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"OTP verified successfully\",\n    \"data\": null,\n    \"status\": 200\n}"
+        }
+      ]
+    },
+    {
+      "name": "Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\",\r\n  \"newPassword\": \"Jayanta@1234\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/password-recovery/reset-password",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "password-recovery",
+            "reset-password"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Reset Password - ??",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\",\r\n  \"newPassword\": \"Jayanta@1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/password-recovery/reset-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "password-recovery",
+                "reset-password"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "66"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"42-UuGwaGOWCUu82i5gMAa++Y5CLRc\""
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 08 Jul 2026 08:42:09 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Password reset successfully\",\n    \"data\": null,\n    \"status\": 200\n}"
+        }
+      ]
     }
   ]
 }
