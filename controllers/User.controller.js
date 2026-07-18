@@ -1,39 +1,34 @@
 const userService = require("../services/User.service");
-const loginDetailsService = require("../services/LoginDetails.service");
 const { sendSuccess, sendError } = require("../utils/responseFormatter");
 const _ = require("lodash");
 
+// Register User
 exports.registerUser = async (req, res) => {
   try {
     const user = await userService.registerUser(req.body);
-    const loginRecord = await loginDetailsService.createLoginDetail({
-      user_id: user._id,
-      login_time: new Date(),
-      is_active: true,
-    });
 
-    const token = user.getAuthToken(loginRecord._id);
-
-    res
-      .header("x-auth-token", token)
-      .json({
-        message: "User registered successfully",
-        data: _.pick(user, ["_id", "name", "email"]),
-        status: "success",
-      });
+    return sendSuccess(
+      res,
+      "User registered successfully",
+      _.pick(user, ["_id", "name", "email", "isAdmin"]),
+      201,
+    );
   } catch (err) {
     if (err.message.includes("already registered")) {
       return sendError(res, err.message, null, 400);
     }
-    sendError(res, "Failed to register user", err, 500);
+
+    return sendError(res, "Failed to register user", err, 500);
   }
 };
 
+// Current User
 exports.getCurrentUser = async (req, res) => {
   try {
     const user = await userService.getUserById(req.user._id);
-    sendSuccess(res, "User fetched successfully", user, 200);
+
+    return sendSuccess(res, "User fetched successfully", user, 200);
   } catch (err) {
-    sendError(res, "Failed to fetch user", err, 500);
+    return sendError(res, "Failed to fetch user", err, 500);
   }
 };
