@@ -13,10 +13,16 @@
           "type": "noauth"
         },
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"subject\": \"First Subject\",\r\n//     \"description\": \"First description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Second Subject\",\r\n//     \"description\": \"Second description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Third Subject\",\r\n//     \"description\": \"Third description of the ticket\"\r\n// }\r\n// {\r\n//     \"subject\": \"Forth Subject\",\r\n//     \"description\": \"Forth description of the ticket\"\r\n// }\r\n{\r\n    \"subject\": \"No subject input box\",\r\n    \"description\": \"Subject input box is not showing on chrome browser\"\r\n}",
+          "raw": "// {\r\n//     \"subject\": \"Application running slow\",\r\n//     \"description\": \"From last day application running very slow at user end\"\r\n// }\r\n{\r\n    \"subject\": \"Date format not according to region\",\r\n    \"description\": \"User date format must be dd/MM/yyyy at all instances on UI\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -157,7 +163,13 @@
           "type": "noauth"
         },
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "http://localhost:3001/api/tickets",
           "protocol": "http",
@@ -235,9 +247,15 @@
           "type": "noauth"
         },
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "url": {
-          "raw": "http://localhost:3001/api/tickets/6a1afa518fb2855321f20228",
+          "raw": "http://localhost:3001/api/tickets/6a5dd3fd6c7c2c9fe20891c3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -246,7 +264,7 @@
           "path": [
             "api",
             "tickets",
-            "6a1afa518fb2855321f20228"
+            "6a5dd3fd6c7c2c9fe20891c3"
           ]
         }
       },
@@ -312,10 +330,16 @@
       "name": "Update partial ticket",
       "request": {
         "method": "PATCH",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"description\": \"Third description of the ticket\"\r\n}",
+          "raw": "{\r\n    \"description\": \"From last day application running very slow at user end\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -323,7 +347,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61f3ef52ee617d4ebff20",
+          "raw": "http://localhost:3001/api/tickets/6a5dd3fd6c7c2c9fe20891c3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -332,7 +356,7 @@
           "path": [
             "api",
             "tickets",
-            "69f61f3ef52ee617d4ebff20"
+            "6a5dd3fd6c7c2c9fe20891c3"
           ]
         }
       },
@@ -458,10 +482,16 @@
           "type": "noauth"
         },
         "method": "PUT",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\": \"First Subject\",\r\n    \"description\": \"Modified first description of the ticket\"\r\n}",
+          "raw": "{\r\n    \"subject\": \"Application running slow on user end\",\r\n    \"description\": \"From last day application running very slow at user end\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -469,7 +499,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3001/api/tickets/69f61a46b5c27a04f362945f",
+          "raw": "http://localhost:3001/api/tickets/6a5dd3fd6c7c2c9fe20891c3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -478,7 +508,7 @@
           "path": [
             "api",
             "tickets",
-            "69f61a46b5c27a04f362945f"
+            "6a5dd3fd6c7c2c9fe20891c3"
           ]
         }
       },
@@ -556,9 +586,15 @@
           "type": "noauth"
         },
         "method": "DELETE",
-        "header": [],
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
         "url": {
-          "raw": "http://localhost:3001/api/tickets/6a0899d43186da09bfbf1a60",
+          "raw": "http://localhost:3001/api/tickets/6a5dd3fd6c7c2c9fe20891c3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -567,7 +603,7 @@
           "path": [
             "api",
             "tickets",
-            "6a0899d43186da09bfbf1a60"
+            "6a5dd3fd6c7c2c9fe20891c3"
           ]
         }
       },
@@ -637,13 +673,12 @@
           {
             "key": "x-auth-token",
             "value": "",
-            "type": "text",
-            "disabled": true
+            "type": "text"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Barun Dutta\",\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Kiran Sarkar\",\r\n//     \"email\": \"kiran.sarkar@yopmail.com\",\r\n//     \"password\": \"Kiran@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Mala Majumdar\",\r\n    \"email\": \"mala.majumdar@yopmail.com\",\r\n    \"password\": \"Mala@1234\",\r\n    \"isAdmin\": \"false\"\r\n}",
+          "raw": "// {\r\n//     \"name\": \"Jayanta B. Sen\",\r\n//     \"email\": \"jayanta.b.sen@yopmail.com\",\r\n//     \"password\": \"Jayanta@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Sujoy Sen\",\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Arun Sen\",\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n{\r\n    \"name\": \"Barun Dutta\",\r\n    \"email\": \"barun.dutta@yopmail.com\",\r\n    \"password\": \"Barun@1234\",\r\n    \"isAdmin\": \"true\"\r\n}\r\n// {\r\n//     \"name\": \"Kiran Sarkar\",\r\n//     \"email\": \"kiran.sarkar@yopmail.com\",\r\n//     \"password\": \"Kiran@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Mala Majumdar\",\r\n//     \"email\": \"mala.majumdar@yopmail.com\",\r\n//     \"password\": \"Mala@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Suvendu Adhikari\",\r\n//     \"email\": \"shuvendu.cm@yopmail.com\",\r\n//     \"password\": \"SAcm@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Jhontu Halder\",\r\n//     \"email\": \"jhontu.halder@yopmail.com\",\r\n//     \"password\": \"Jhuntu@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Soma Dey\",\r\n//     \"email\": \"soma.dey@yopmail.com\",\r\n//     \"password\": \"Soma@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Soumyajit Halder\",\r\n//     \"email\": \"soumya.h@yopmail.com\",\r\n//     \"password\": \"Soumyajit@1234\",\r\n//     \"isAdmin\": \"true\"\r\n// }\r\n// {\r\n//     \"name\": \"Shubham Dey\",\r\n//     \"email\": \"shubham.dey@yopmail.com\",\r\n//     \"password\": \"Shubham@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }\r\n// {\r\n//     \"name\": \"Manoj Sharma\",\r\n//     \"email\": \"manoj.sharma@yopmail.com\",\r\n//     \"password\": \"Manoj@1234\",\r\n//     \"isAdmin\": \"false\"\r\n// }",
           "options": {
             "raw": {
               "language": "json"
@@ -788,7 +823,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\",\r\n    \"password\": \"Jayanta@1234\"\r\n}\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }\r\n// {\r\n//     \"email\": \"barun.dutta@yopmail.com\",\r\n//     \"password\": \"Barun@1234\"\r\n// }",
+          "raw": "{\r\n    \"email\": \"jayanta.b.sen@yopmail.com\",\r\n    \"password\": \"Jayanta@4321\"\r\n}\r\n// {\r\n//     \"email\": \"sujoy.sen@yopmail.com\",\r\n//     \"password\": \"Sujoy@1234\"\r\n// }\r\n// {\r\n//     \"email\": \"arun.sen@yopmail.com\",\r\n//     \"password\": \"Arun@1234\"\r\n// }",
           "options": {
             "raw": {
               "language": "json"
@@ -1092,7 +1127,7 @@
       },
       "response": [
         {
-          "name": "Send OTP - ??",
+          "name": "Send OTP - success",
           "originalRequest": {
             "method": "POST",
             "header": [],
@@ -1212,7 +1247,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\"\r\n}",
+          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"564146\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1235,7 +1270,7 @@
       },
       "response": [
         {
-          "name": "Verify OTP - ??",
+          "name": "Verify OTP - success",
           "originalRequest": {
             "method": "POST",
             "header": [],
@@ -1355,7 +1390,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"533800\",\r\n  \"newPassword\": \"Jayanta@1234\"\r\n}",
+          "raw": "{\r\n  \"email\": \"jayanta.b.sen@yopmail.com\",\r\n  \"otp\": \"564146\",\r\n  \"newPassword\": \"Jayanta@4321\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1488,6 +1523,161 @@
           ],
           "cookie": [],
           "body": "{\n    \"message\": \"Password reset successfully\",\n    \"data\": null,\n    \"status\": 200\n}"
+        }
+      ]
+    },
+    {
+      "name": "Log out",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-auth-token",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/auth/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Log out - success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "56"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"38-1MD11FZ/YpUZ9FqLXUl/VaOhOaA\""
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 14 Jul 2026 08:03:42 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Logout successful\",\n    \"data\": null,\n    \"status\": 200\n}"
         }
       ]
     }
