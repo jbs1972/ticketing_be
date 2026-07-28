@@ -46,25 +46,6 @@ const loginDetailsSchema = new Schema(
     },
 
     // Client Information
-    ip_address: {
-      type: String,
-      default: null,
-    },
-
-    browser: {
-      type: String,
-      default: null,
-    },
-
-    operating_system: {
-      type: String,
-      default: null,
-    },
-
-    device_name: {
-      type: String,
-      default: null,
-    },
 
     fingerprint: {
       type: String,

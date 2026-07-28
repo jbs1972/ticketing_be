@@ -33,17 +33,13 @@ exports.loginUser = async (req, res) => {
     // Invalidate Previous Sessions
     await loginDetailsService.deactivatePreviousSessions(user._id);
 
-    // Generate Client Information
+    // Generate Fingerprint
     const client = generateFingerprint(req);
 
     // Create Login Session
     await loginDetailsService.createLoginDetail({
       user_id: user._id,
       session_id: sessionId,
-      ip_address: client.ipAddress,
-      browser: client.browser,
-      operating_system: client.operatingSystem,
-      device_name: client.deviceName,
       fingerprint: client.fingerprint,
       login_time: new Date(),
       is_active: true,
@@ -81,8 +77,15 @@ exports.logoutUser = async (req, res) => {
 // Validation
 function validateLogin(body) {
   const schema = Joi.object({
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(6).max(1024).required(),
+    email: Joi.string().trim().email().required().messages({
+      "string.email": "Invalid email or password.",
+      "string.empty": "Invalid email or password.",
+      "any.required": "Invalid email or password.",
+    }),
+    password: Joi.string().required().messages({
+      "string.empty": "Invalid email or password.",
+      "any.required": "Invalid email or password.",
+    }),
   });
 
   return schema.validate(body);

@@ -272,7 +272,15 @@ const router = express.Router();
  *         description: Ticket not found
  */
 
-router.route("/").get(auth, getAllTickets).post(auth, admin, validateCreateTicketMiddleware, createTicket);
-router.route("/:id").get(auth, getTicketById).put(auth, admin, validateUpdateTicketMiddleware, updateTicket).patch(auth, validatePatchTicketMiddleware, patchTicket).delete(auth, admin, deleteTicket);
+router
+  .route("/")
+  .get(auth, getAllTickets)
+  .post(auth, admin, validateCreateTicketMiddleware, createTicket);
+router
+  .route("/:id")
+  .get(auth, getTicketById)
+  .put(auth, admin, validateUpdateTicketMiddleware, updateTicket)
+  .patch(auth, validatePatchTicketMiddleware, patchTicket)
+  .delete(auth, admin, deleteTicket);
 
 module.exports = router;
