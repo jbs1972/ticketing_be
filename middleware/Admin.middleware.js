@@ -1,5 +1,10 @@
-module.exports = function(req, res, next) {
-    // 401 Unauthorized  & 403 Forbidden
-    if (!req.user.isAdmin) return res.status(403).send('Access denied.');
-    next();
+const { sendError } = require("../utils/responseFormatter");
+
+module.exports = function (req, res, next) {
+  // 403 Forbidden
+  if (!req.user.isAdmin) {
+    return sendError(res, "Access denied.", null, 403);
+  }
+
+  next();
 };
