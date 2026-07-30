@@ -27,3 +27,7 @@ exports.registerUser = async (userData) => {
 exports.getUserById = async (id) => {
   return await User.findById(id).select("-password");
 };
+
+exports.getAllUsers = async () => {
+  return await User.find().select("name email isAdmin").sort({ _id: -1 });
+};

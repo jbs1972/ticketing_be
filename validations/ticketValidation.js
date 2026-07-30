@@ -1,8 +1,6 @@
 const Joi = require("joi");
 
-/**
- * Joi schema for creating a ticket
- */
+// Joi schema for creating a ticket
 const createTicketSchema = Joi.object({
   subject: Joi.string()
     .required()
@@ -28,9 +26,7 @@ const createTicketSchema = Joi.object({
     }),
 });
 
-/**
- * Joi schema for updating a ticket
- */
+// Joi schema for updating a ticket
 const updateTicketSchema = Joi.object({
   subject: Joi.string()
     .min(5)
@@ -54,11 +50,7 @@ const updateTicketSchema = Joi.object({
   "object.min": "At least one field must be provided for update",
 });
 
-/*
-|--------------------------------------------------------------------------
-| Partial Update Validation (PATCH)
-|--------------------------------------------------------------------------
-*/
+// Partial Update Validation (PATCH)
 const patchTicketSchema = Joi.object({
   subject: Joi.string()
     .min(5)
@@ -69,23 +61,17 @@ const patchTicketSchema = Joi.object({
     .max(1000),
 }).min(1);
 
-/**
- * Validate create ticket request
- */
+// Validate create ticket request
 const validateCreateTicket = (data) => {
   return createTicketSchema.validate(data, { abortEarly: false });
 };
 
-/**
- * Validate update ticket request
- */
+// Validate update ticket request
 const validateUpdateTicket = (data) => {
   return updateTicketSchema.validate(data, { abortEarly: false });
 };
 
-/**
- * Middleware to validate create ticket
- */
+// Middleware to validate create ticket
 const validateCreateTicketMiddleware = (req, res, next) => {
   const { error, value } = validateCreateTicket(req.body);
   if (error) {
@@ -100,9 +86,7 @@ const validateCreateTicketMiddleware = (req, res, next) => {
   next();
 };
 
-/**
- * Middleware to validate update ticket
- */
+// Middleware to validate update ticket
 const validateUpdateTicketMiddleware = (req, res, next) => {
   const { error, value } = validateUpdateTicket(req.body);
   if (error) {

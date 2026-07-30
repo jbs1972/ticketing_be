@@ -6,73 +6,105 @@ exports.getAllTickets = async (req, res) => {
     const tickets = await ticketService.getAllTickets();
     sendSuccess(res, "Tickets fetched successfully", tickets, 200);
   } catch (err) {
-    sendError(res, "Failed to fetch tickets", err, 500);
+    sendError(res, err.message || "Failed to fetch tickets", null, 500);
   }
 };
 
 exports.createTicket = async (req, res) => {
   try {
     const ticket = await ticketService.createTicket(req.body);
+
     sendSuccess(res, "Ticket created successfully", ticket, 201);
   } catch (err) {
-    sendError(res, "Failed to create ticket", err, 500);
+    if (err.name === "ValidationError") {
+      return sendError(
+        res,
+        Object.values(err.errors)
+          .map((error) => error.message)
+          .join(", "),
+        null,
+        400,
+      );
+    }
+
+    sendError(res, err.message || "Failed to create ticket", null, 500);
   }
 };
 
 exports.getTicketById = async (req, res) => {
   try {
     const ticket = await ticketService.getTicketById(req.params.id);
+
     if (!ticket) {
       return sendError(res, "Ticket not found", null, 404);
     }
+
     sendSuccess(res, "Ticket fetched successfully", ticket, 200);
   } catch (err) {
-    sendError(res, "Failed to fetch ticket", err, 500);
+    sendError(res, err.message || "Failed to fetch ticket", null, 500);
   }
 };
 
 exports.updateTicket = async (req, res) => {
   try {
     const ticket = await ticketService.updateTicket(req.params.id, req.body);
+
     if (!ticket) {
       return sendError(res, "Ticket not found", null, 404);
     }
+
     sendSuccess(res, "Ticket updated successfully", ticket, 200);
   } catch (err) {
-    sendError(res, "Failed to update ticket", err, 500);
+    if (err.name === "ValidationError") {
+      return sendError(
+        res,
+        Object.values(err.errors)
+          .map((error) => error.message)
+          .join(", "),
+        null,
+        400,
+      );
+    }
+
+    sendError(res, err.message || "Failed to update ticket", null, 500);
   }
 };
 
 exports.patchTicket = async (req, res) => {
   try {
-    const ticket = await ticketService.patchTicket(
-      req.params.id,
-      req.body
-    );
+    const ticket = await ticketService.patchTicket(req.params.id, req.body);
 
     if (!ticket) {
       return sendError(res, "Ticket not found", null, 404);
     }
 
-    sendSuccess(
-      res,
-      "Ticket partially updated successfully",
-      ticket,
-      200
-    );
+    sendSuccess(res, "Ticket partially updated successfully", ticket, 200);
   } catch (err) {
-    sendError(res, "Failed to update ticket", err, 500);
+    if (err.name === "ValidationError") {
+      return sendError(
+        res,
+        Object.values(err.errors)
+          .map((error) => error.message)
+          .join(", "),
+        null,
+        400,
+      );
+    }
+
+    sendError(res, err.message || "Failed to update ticket", null, 500);
   }
 };
 
 exports.deleteTicket = async (req, res) => {
   try {
     const ticket = await ticketService.deleteTicket(req.params.id);
+
     if (!ticket) {
       return sendError(res, "Ticket not found", null, 404);
     }
+
     res.status(204).end();
   } catch (err) {
-    sendError(res, "Failed to delete ticket", err, 500);
+    sendError(res, err.message || "Failed to delete ticket", null, 500);
   }
 };

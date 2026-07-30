@@ -32,3 +32,14 @@ exports.getCurrentUser = async (req, res) => {
     return sendError(res, "Failed to fetch user", err, 500);
   }
 };
+
+// Admin: Get All Users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+
+    return sendSuccess(res, "Users fetched successfully", users, 200);
+  } catch (err) {
+    return sendError(res, "Failed to fetch users", err, 500);
+  }
+};

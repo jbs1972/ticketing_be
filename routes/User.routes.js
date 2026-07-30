@@ -1,7 +1,11 @@
 const express = require("express");
 const auth = require("../middleware/Auth.middleware");
 const admin = require("../middleware/Admin.middleware");
-const { registerUser, getCurrentUser } = require("../controllers/User.controller");
+const {
+  registerUser,
+  getCurrentUser,
+  getAllUsers,
+} = require("../controllers/User.controller");
 const { validate } = require("../models/User.model");
 
 const router = express.Router();
@@ -48,6 +52,42 @@ router.get("/me", auth, getCurrentUser);
 /**
  * @swagger
  * /users:
+ *   get:
+ *     summary: Get all users (Admin only)
+ *     description: Retrieve a list of all registered users. Accessible only to administrators.
+ *     tags: [Users]
+ *     security:
+ *       - TokenAuth: []
+ *     responses:
+ *       200:
+ *         description: Users fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Users fetched successfully
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - No token provided
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/", auth, admin, getAllUsers);
+
+/**
+ * @swagger
+ * /users:
  *   post:
  *     summary: Create new user (Admin only)
  *     description: Register a new user in the system. Only authenticated admin users can create new users.
@@ -85,18 +125,22 @@ router.get("/me", auth, getCurrentUser);
  *       500:
  *         description: Internal server error
  */
-router.post("/", auth, admin, (req, res, next) => {
-  const { error } = validate(req.body);
-  if (error) {
-    return res
-      .status(400)
-      .json({
+router.post(
+  "/",
+  auth,
+  admin,
+  (req, res, next) => {
+    const { error } = validate(req.body);
+    if (error) {
+      return res.status(400).json({
         message: error.details[0].message,
         data: null,
         status: "error",
       });
-  }
-  next();
-}, registerUser);
+    }
+    next();
+  },
+  registerUser,
+);
 
 module.exports = router;
