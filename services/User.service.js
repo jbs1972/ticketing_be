@@ -11,8 +11,16 @@ exports.registerUser = async (userData) => {
     throw new Error("User already registered.");
   }
 
+  // Sanitize user data by trimming whitespace from string fields
+  const sanitizedUserData = Object.fromEntries(
+    Object.entries(userData).map(([key, value]) => [
+      key,
+      typeof value === "string" ? value.trim() : value,
+    ]),
+  );
+
   // Create new user with selected fields
-  user = new User(_.pick(userData, ["name", "email", "password", "isAdmin"]));
+  user = new User(_.pick(sanitizedUserData, ["name", "email", "password", "isAdmin"]));
 
   // Hash password
   const salt = await bcrypt.genSalt(SALT_ROUNDS);

@@ -2,12 +2,19 @@ const express = require("express");
 const auth = require("../middleware/Auth.middleware");
 const admin = require("../middleware/Admin.middleware");
 const {
+  uploadAttachmentsMiddleware,
+} = require("../middleware/Upload.middleware");
+
+const {
   getAllTickets,
   createTicket,
   getTicketById,
   updateTicket,
   patchTicket,
   deleteTicket,
+  uploadAttachments,
+  downloadAttachment,
+  deleteAttachment,
 } = require("../controllers/Ticket.controller");
 
 const {
@@ -276,11 +283,21 @@ router
   .route("/")
   .get(auth, getAllTickets)
   .post(auth, admin, validateCreateTicketMiddleware, createTicket);
+
 router
   .route("/:id")
   .get(auth, getTicketById)
   .put(auth, admin, validateUpdateTicketMiddleware, updateTicket)
   .patch(auth, validatePatchTicketMiddleware, patchTicket)
   .delete(auth, admin, deleteTicket);
+
+router
+  .route("/:id/attachments")
+  .post(auth, admin, uploadAttachmentsMiddleware, uploadAttachments);
+
+router
+  .route("/:id/attachments/:fileName")
+  .get(auth, downloadAttachment)
+  .delete(auth, admin, deleteAttachment);
 
 module.exports = router;
