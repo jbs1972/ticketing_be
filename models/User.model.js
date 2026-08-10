@@ -18,6 +18,8 @@ const passwordSchema = Joi.string()
     "any.required": "Password is required",
   });
 
+const ROLES = ["admin", "user"];
+
 // User Schema
 const userSchema = new mongoose.Schema({
   name: {
@@ -39,34 +41,67 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     maxlength: 1024, // Allow longer passwords for bcrypt hashes
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  role: {
+    type: String,
+    enum: ROLES,
+    default: "user",
   },
-  // roles: []
-  // operations: []
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 //Generate JWT Token
 userSchema.methods.getAuthToken = function (sessionId) {
-  const payload = { _id: this._id, isAdmin: this.isAdmin };
+  const payload = { _id: this._id, role: this.role };
   // Include Session Id
   if (sessionId) payload.session_id = sessionId;
-  const token = jwt.sign(payload, config.get("jwtPrivateKey"));
+  const token = jwt.sign(payload, config.get("jwtPrivateKey"), {
+    expiresIn: "8h",
+  });
   return token;
 };
 // User Model
 const User = mongoose.model("User", userSchema);
-// User Validation
+// User Validation - superadmin is DB-seeded only, never via API
 function validateUser(user) {
   const schema = Joi.object({
-    name: Joi.string().min(3).required(),
+    name: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: passwordSchema,
-    isAdmin: Joi.boolean(),
+    role: Joi.string().valid("admin", "user"),
   });
 
   return schema.validate(user);
 }
+// Status Validation
+function validateStatus(body) {
+  const schema = Joi.object({
+    isActive: Joi.boolean().required(),
+  });
+
+  return schema.validate(body);
+}
+// Role Validation - superadmin not assignable via UI
+function validateRole(body) {
+  const schema = Joi.object({
+    role: Joi.string().valid("admin", "user").required(),
+  });
+
+  return schema.validate(body);
+}
+// Name Validation
+function validateName(body) {
+  const schema = Joi.object({
+    name: Joi.string().min(5).max(50).required(),
+  });
+
+  return schema.validate(body);
+}
 
 exports.User = User;
+exports.ROLES = ROLES;
 exports.validate = validateUser;
+exports.validateStatus = validateStatus;
+exports.validateRole = validateRole;
+exports.validateName = validateName;

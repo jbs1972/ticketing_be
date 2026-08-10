@@ -27,6 +27,16 @@ exports.loginUser = async (req, res) => {
       return sendError(res, "Invalid email or password.", null, 400);
     }
 
+    // Check Account Status
+    if (user.isActive === false) {
+      return sendError(
+        res,
+        "Your account has been frozen. Please contact your administrator for assistance.",
+        null,
+        403,
+      );
+    }
+
     // Generate Session Id
     const sessionId = crypto.randomUUID();
 
@@ -41,6 +51,7 @@ exports.loginUser = async (req, res) => {
       user_id: user._id,
       session_id: sessionId,
       fingerprint: client.fingerprint,
+      socket_id: req.header("x-socket-id") || null,
       login_time: new Date(),
       is_active: true,
     });

@@ -51,6 +51,11 @@ const loginDetailsSchema = new Schema(
       type: String,
       default: null,
     },
+
+    socket_id: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

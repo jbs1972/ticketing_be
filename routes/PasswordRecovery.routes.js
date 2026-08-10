@@ -67,7 +67,11 @@ router.post("/send-otp", validateSendOtp, passwordRecoveryController.sendOtp);
  *       400:
  *         description: Invalid or expired OTP
  */
-router.post("/verify-otp", validateVerifyOtp, passwordRecoveryController.verifyOtp);
+router.post(
+  "/verify-otp",
+  validateVerifyOtp,
+  passwordRecoveryController.verifyOtp,
+);
 
 /**
  * @swagger
@@ -99,6 +103,10 @@ router.post("/verify-otp", validateVerifyOtp, passwordRecoveryController.verifyO
  *       400:
  *         description: Invalid OTP or password reset failed
  */
-router.post("/reset-password", validateResetPassword, passwordRecoveryController.resetPassword);
+router.post(
+  "/reset-password",
+  validateResetPassword,
+  passwordRecoveryController.resetPassword,
+);
 
 module.exports = router;

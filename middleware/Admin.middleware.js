@@ -1,8 +1,8 @@
 const { sendError } = require("../utils/responseFormatter");
 
+// Grants access to Admin only
 module.exports = function (req, res, next) {
-  // 403 Forbidden
-  if (!req.user.isAdmin) {
+  if (req.user.role !== "admin") {
     return sendError(res, "Access denied.", null, 403);
   }
 

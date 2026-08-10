@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const loginDetailsService = require("../services/LoginDetails.service");
+const { User } = require("../models/User.model");
 const { sendError } = require("../utils/responseFormatter");
 const { generateFingerprint } = require("../utils/fingerprint");
 
@@ -34,6 +35,17 @@ module.exports = async function (req, res, next) {
     const session = await loginDetailsService.getActiveSession(sessionId);
 
     if (!session) {
+      const user = await User.findById(decoded._id).select("isActive");
+
+      if (user && user.isActive === false) {
+        return sendError(
+          res,
+          "Your account has been frozen. Please contact your administrator for assistance.",
+          null,
+          403,
+        );
+      }
+
       return sendError(res, "Session expired. Please login again.", null, 401);
     }
 
@@ -42,6 +54,13 @@ module.exports = async function (req, res, next) {
 
     if (session.fingerprint && session.fingerprint !== client.fingerprint) {
       return sendError(res, "Session validation failed.", null, 401);
+    }
+
+    // Refresh Socket Id
+    const socketId = req.header("x-socket-id");
+
+    if (socketId && session.socket_id !== socketId) {
+      await loginDetailsService.updateSocketId(sessionId, socketId);
     }
 
     next();

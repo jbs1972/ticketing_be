@@ -2,12 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
+const http = require("http");
+const { initSocket } = require("./utils/socket");
 
 const authRoutes = require("./routes/Auth.routes");
 const userRoutes = require("./routes/User.routes");
 const loginDetailsRoutes = require("./routes/LoginDetails.routes");
 const passwordRecoveryRoutes = require("./routes/PasswordRecovery.routes");
 const config = require("./config/env.config");
+const { failureBasedLimiter } = require("./middleware/RateLimit.middleware");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger.config");
@@ -18,7 +21,15 @@ const fs = require("fs");
 const path = require("path");
 const morgan = require("morgan");
 
+const ticketService = require("./services/Ticket.service");
+const seedAdmin = require("./utils/seedAdmin");
+
+const ticketStatusRoutes = require("./routes/TicketStatus.routes");
+const ticketStatusService = require("./services/TicketStatus.service");
+
 const app = express();
+const server = http.createServer(app);
+initSocket(server);
 
 // Logging Configuration
 // Create logs directory if not exists
@@ -31,13 +42,13 @@ const accessLogStream = fs.createWriteStream(
   path.join(__dirname, config.logFile),
   {
     flags: "a",
-  }
+  },
 );
 // HTTP Request Logger
 app.use(
   morgan("combined", {
     stream: accessLogStream,
-  })
+  }),
 );
 // Console logging in development
 if (config.nodeEnv === "dev") {
@@ -47,11 +58,15 @@ if (config.nodeEnv === "dev") {
 // Database Connection
 mongoose
   .connect(config.mongodbUri)
-  .then(() => {
+  .then(async () => {
     console.log("=================================");
     console.log("✅ MongoDB Connected Successfully");
     console.log(`✅ Database : ${config.dbName}`);
     console.log("=================================");
+
+    await seedAdmin();
+    await ticketService.ensureTicketCodes();
+    await ticketStatusService.ensureDefaultStatuses();
   })
   .catch((error) => {
     console.error("❌ MongoDB Connection Failed");
@@ -69,13 +84,16 @@ if (config.helmetEnabled) {
 app.use(
   cors({
     origin: config.allowedOrigins,
-  })
+  }),
 );
 
 // Body Parser
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+// Apply failure-based rate limiter globally to all API routes
+app.use(config.apiPrefix, failureBasedLimiter);
 
 // Health Check Route
 app.get("/", (req, res) => {
@@ -87,26 +105,12 @@ app.get("/", (req, res) => {
 });
 
 // API Routes
-app.use(
-  `${config.apiPrefix}/tickets`,
-  ticketRoutes
-);
-app.use(
-  `${config.apiPrefix}/auth`,
-  authRoutes
-);
-app.use(
-  `${config.apiPrefix}/users`,
-  userRoutes
-);
-app.use(
-  `${config.apiPrefix}/login-details`,
-  loginDetailsRoutes
-);
-app.use(
-  `${config.apiPrefix}/password-recovery`,
-  passwordRecoveryRoutes
-);
+app.use(`${config.apiPrefix}/tickets`, ticketRoutes);
+app.use(`${config.apiPrefix}/auth`, authRoutes);
+app.use(`${config.apiPrefix}/users`, userRoutes);
+app.use(`${config.apiPrefix}/login-details`, loginDetailsRoutes);
+app.use(`${config.apiPrefix}/password-recovery`, passwordRecoveryRoutes);
+app.use(`${config.apiPrefix}/ticket-statuses`, ticketStatusRoutes);
 
 // Swagger Documentation
 app.use(
@@ -134,7 +138,7 @@ app.use(
         margin-bottom: 30px;
       }
     `,
-  })
+  }),
 );
 
 // 404 Handler
@@ -157,22 +161,16 @@ app.use((err, req, res, next) => {
 
 // Start Server
 
-app.listen(config.port, () => {
+server.listen(config.port, () => {
   console.log("=================================");
+  console.log(`✅ Server Running On Port ${config.port}`);
+  console.log(`✅ Environment : ${config.nodeEnv}`);
   console.log(
-    `✅ Server Running On Port ${config.port}`
-  );
-  console.log(
-    `✅ Environment : ${config.nodeEnv}`
-  );
-  console.log(
-    `✅ API URL : http://localhost:${config.port}${config.apiPrefix}/tickets`
+    `✅ API URL : http://localhost:${config.port}${config.apiPrefix}/tickets`,
   );
 
   if (config.swaggerEnabled) {
-    console.log(
-      `✅ Swagger Docs : http://localhost:${config.port}/api-docs`
-    );
+    console.log(`✅ Swagger Docs : http://localhost:${config.port}/api-docs`);
   }
 
   console.log("=================================");

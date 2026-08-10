@@ -15,7 +15,14 @@ const {
   uploadAttachments,
   downloadAttachment,
   deleteAttachment,
+  updateTicketStatus,
 } = require("../controllers/Ticket.controller");
+
+const {
+  getComments,
+  createComment,
+  downloadCommentAttachment,
+} = require("../controllers/Comment.controller");
 
 const {
   validateCreateTicketMiddleware,
@@ -285,19 +292,30 @@ router
   .post(auth, admin, validateCreateTicketMiddleware, createTicket);
 
 router
-  .route("/:id")
+  .route("/:code")
   .get(auth, getTicketById)
   .put(auth, admin, validateUpdateTicketMiddleware, updateTicket)
   .patch(auth, validatePatchTicketMiddleware, patchTicket)
   .delete(auth, admin, deleteTicket);
 
 router
-  .route("/:id/attachments")
+  .route("/:code/attachments")
   .post(auth, admin, uploadAttachmentsMiddleware, uploadAttachments);
 
 router
-  .route("/:id/attachments/:fileName")
+  .route("/:code/attachments/:fileName")
   .get(auth, downloadAttachment)
   .delete(auth, admin, deleteAttachment);
+
+router.route("/:code/status").patch(auth, admin, updateTicketStatus);
+
+router
+  .route("/:code/comments")
+  .get(auth, getComments)
+  .post(auth, uploadAttachmentsMiddleware, createComment);
+
+router
+  .route("/:code/comments/:commentId/attachments/:fileName")
+  .get(auth, downloadCommentAttachment);
 
 module.exports = router;

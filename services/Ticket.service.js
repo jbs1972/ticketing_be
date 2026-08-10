@@ -1,16 +1,40 @@
 const TicketModel = require("../models/Ticket.model");
-const mongoose = require("mongoose");
+const CounterModel = require("../models/Counter.model");
 const fs = require("fs");
 const path = require("path");
+const commentService = require("./Comment.service");
 
 const uploadsRoot = path.join(__dirname, "..", "uploads", "tickets");
 
-const validateTicketId = (ticketId) => {
-  if (!mongoose.Types.ObjectId.isValid(ticketId)) {
-    const error = new Error("Invalid ticket id");
+const TICKET_CODE_REGEX = /^\d{6}$/;
+
+const validateTicketCode = (code) => {
+  if (!TICKET_CODE_REGEX.test(code)) {
+    const error = new Error("Invalid ticket code");
     error.status = 400;
     throw error;
   }
+};
+
+// Atomically increments a shared counter to produce sequential codes (100001, 100002, ...)
+const generateTicketCode = async () => {
+  const counter = await CounterModel.findOneAndUpdate(
+    { _id: "ticketCode" },
+    { $inc: { seq: 1 } },
+    { new: true },
+  );
+
+  if (counter) {
+    return counter.seq.toString();
+  }
+
+  // Counter doesn't exist yet - create it so the schema default (100000) applies, then start at 100001
+  const newCounter = await CounterModel.create({
+    _id: "ticketCode",
+    seq: 100001,
+  });
+
+  return newCounter.seq.toString();
 };
 
 exports.getAllTickets = async () => {
@@ -18,43 +42,50 @@ exports.getAllTickets = async () => {
 };
 
 exports.createTicket = async (ticket) => {
-  return await TicketModel.create(ticket);
+  const ticketCode = await generateTicketCode();
+
+  return await TicketModel.create({ ...ticket, ticketCode });
 };
 
-exports.getTicketById = async (id) => {
-  validateTicketId(id);
+exports.getTicketById = async (code) => {
+  validateTicketCode(code);
 
-  return await TicketModel.findById(id);
+  return await TicketModel.findOne({ ticketCode: code });
 };
 
-exports.updateTicket = async (id, ticket) => {
-  validateTicketId(id);
+exports.updateTicket = async (code, ticket) => {
+  validateTicketCode(code);
 
-  return await TicketModel.findByIdAndUpdate(id, ticket, {
+  return await TicketModel.findOneAndUpdate({ ticketCode: code }, ticket, {
     new: true,
     runValidators: true,
   });
 };
 
-exports.patchTicket = async (id, patchData) => {
-  validateTicketId(id);
+exports.patchTicket = async (code, patchData) => {
+  validateTicketCode(code);
 
-  return await TicketModel.findByIdAndUpdate(
-    id,
-    {
-      $set: patchData,
-    },
-    {
-      new: true,
-      runValidators: true,
-    },
+  return await TicketModel.findOneAndUpdate(
+    { ticketCode: code },
+    { $set: patchData },
+    { new: true, runValidators: true },
   );
 };
 
-exports.uploadAttachments = async (ticketId, files) => {
-  validateTicketId(ticketId);
+exports.updateTicketStatus = async (code, status) => {
+  validateTicketCode(code);
 
-  const ticket = await TicketModel.findById(ticketId);
+  return await TicketModel.findOneAndUpdate(
+    { ticketCode: code },
+    { $set: { status } },
+    { new: true, runValidators: true },
+  );
+};
+
+exports.uploadAttachments = async (code, files) => {
+  validateTicketCode(code);
+
+  const ticket = await TicketModel.findOne({ ticketCode: code });
 
   if (!ticket) {
     const error = new Error("Ticket not found");
@@ -62,7 +93,7 @@ exports.uploadAttachments = async (ticketId, files) => {
     throw error;
   }
 
-  const ticketFolder = path.join(uploadsRoot, ticketId);
+  const ticketFolder = path.join(uploadsRoot, code);
 
   fs.mkdirSync(ticketFolder, { recursive: true });
 
@@ -84,10 +115,10 @@ exports.uploadAttachments = async (ticketId, files) => {
   return ticket;
 };
 
-exports.getAttachment = async (ticketId, fileName) => {
-  validateTicketId(ticketId);
+exports.getAttachment = async (code, fileName) => {
+  validateTicketCode(code);
 
-  const ticket = await TicketModel.findById(ticketId);
+  const ticket = await TicketModel.findOne({ ticketCode: code });
 
   if (!ticket) {
     const error = new Error("Ticket not found");
@@ -105,7 +136,7 @@ exports.getAttachment = async (ticketId, fileName) => {
     throw error;
   }
 
-  const filePath = path.join(uploadsRoot, ticketId, fileName);
+  const filePath = path.join(uploadsRoot, code, fileName);
 
   if (!fs.existsSync(filePath)) {
     const error = new Error("Attachment not found");
@@ -113,16 +144,13 @@ exports.getAttachment = async (ticketId, fileName) => {
     throw error;
   }
 
-  return {
-    attachment,
-    filePath,
-  };
+  return { attachment, filePath };
 };
 
-exports.deleteAttachment = async (ticketId, fileName) => {
-  validateTicketId(ticketId);
+exports.deleteAttachment = async (code, fileName) => {
+  validateTicketCode(code);
 
-  const ticket = await TicketModel.findById(ticketId);
+  const ticket = await TicketModel.findOne({ ticketCode: code });
 
   if (!ticket) {
     const error = new Error("Ticket not found");
@@ -140,7 +168,7 @@ exports.deleteAttachment = async (ticketId, fileName) => {
     throw error;
   }
 
-  const filePath = path.join(uploadsRoot, ticketId, fileName);
+  const filePath = path.join(uploadsRoot, code, fileName);
 
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
@@ -152,7 +180,7 @@ exports.deleteAttachment = async (ticketId, fileName) => {
 
   await ticket.save();
 
-  const ticketFolder = path.join(uploadsRoot, ticketId);
+  const ticketFolder = path.join(uploadsRoot, code);
 
   if (
     fs.existsSync(ticketFolder) &&
@@ -164,25 +192,49 @@ exports.deleteAttachment = async (ticketId, fileName) => {
   return ticket;
 };
 
-exports.deleteTicket = async (id) => {
-  validateTicketId(id);
+exports.deleteTicket = async (code) => {
+  validateTicketCode(code);
 
-  const ticket = await TicketModel.findById(id);
+  const ticket = await TicketModel.findOne({ ticketCode: code });
 
   if (!ticket) {
     return null;
   }
 
-  const ticketFolder = path.join(uploadsRoot, id);
+  const ticketFolder = path.join(uploadsRoot, code);
 
   if (fs.existsSync(ticketFolder)) {
-    fs.rmSync(ticketFolder, {
-      recursive: true,
-      force: true,
-    });
+    fs.rmSync(ticketFolder, { recursive: true, force: true });
   }
 
   await ticket.deleteOne();
+  await commentService.deleteCommentsByTicket(code);
 
   return ticket;
+};
+
+// One-time migration: assigns a ticketCode (and renames the upload folder) for tickets that existed before this feature
+exports.ensureTicketCodes = async () => {
+  const legacyTickets = await TicketModel.find({
+    $or: [{ ticketCode: { $exists: false } }, { ticketCode: null }],
+  });
+
+  for (const ticket of legacyTickets) {
+    const newCode = await generateTicketCode();
+    const oldFolder = path.join(uploadsRoot, String(ticket._id));
+    const newFolder = path.join(uploadsRoot, newCode);
+
+    if (fs.existsSync(oldFolder)) {
+      fs.renameSync(oldFolder, newFolder);
+    }
+
+    ticket.ticketCode = newCode;
+    await ticket.save();
+  }
+
+  if (legacyTickets.length) {
+    console.log(
+      `✅ Assigned ticket codes to ${legacyTickets.length} existing ticket(s)`,
+    );
+  }
 };

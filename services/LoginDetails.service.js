@@ -9,6 +9,7 @@ exports.createLoginDetail = async ({
   operating_system,
   device_name,
   fingerprint,
+  socket_id,
   login_time,
   logout_time,
   is_active,
@@ -21,6 +22,7 @@ exports.createLoginDetail = async ({
     operating_system,
     device_name,
     fingerprint,
+    socket_id,
     login_time: login_time || Date.now(),
     logout_time,
     is_active: typeof is_active === "boolean" ? is_active : true,
@@ -44,7 +46,7 @@ exports.getLoginDetailsByUser = async (userId) => {
 };
 
 // Deactivate Previous Sessions
-exports.deactivatePreviousSessions = async (userId) => {
+exports.deactivatePreviousSessions = async (userId, reason = "New Login") => {
   return await LoginDetail.updateMany(
     {
       user_id: userId,
@@ -54,7 +56,7 @@ exports.deactivatePreviousSessions = async (userId) => {
       $set: {
         is_active: false,
         logout_time: new Date(),
-        logout_reason: "New Login",
+        logout_reason: reason,
       },
     },
   );
@@ -66,6 +68,27 @@ exports.getActiveSession = async (sessionId) => {
     session_id: sessionId,
     is_active: true,
   });
+};
+
+// Get Active Sessions By User
+exports.getActiveSessionsByUser = async (userId) => {
+  return await LoginDetail.find({
+    user_id: userId,
+    is_active: true,
+  });
+};
+
+// Update Socket Id
+exports.updateSocketId = async (sessionId, socketId) => {
+  return await LoginDetail.findOneAndUpdate(
+    {
+      session_id: sessionId,
+      is_active: true,
+    },
+    {
+      $set: { socket_id: socketId },
+    },
+  );
 };
 
 // Mark Logout By Session

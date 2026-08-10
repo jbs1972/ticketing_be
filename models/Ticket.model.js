@@ -36,12 +36,23 @@ const ticketSchema = new Schema(
       maxlength: [100, "Subject cannot exceed 100 characters"],
       trim: true,
     },
+    ticketCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      minlength: 6,
+      maxlength: 6,
+    },
     description: {
       type: String,
       required: [true, "Description is required"],
       minlength: [10, "Description must be at least 10 characters long"],
       maxlength: [1000, "Description cannot exceed 1000 characters"],
       trim: true,
+    },
+    status: {
+      type: String,
+      default: "Open",
     },
     attachments: {
       type: [attachmentSchema],
