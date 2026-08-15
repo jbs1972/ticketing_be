@@ -17,3 +17,5 @@ build/
 .vscode/
 
 /uploads
+
+TaskFlow_BE_NodeMongo.postman_collection.json
