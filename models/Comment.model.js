@@ -31,7 +31,7 @@ const commentSchema = new Schema(
       type: String,
       required: [true, "Comment message is required"],
       trim: true,
-      minlength: 1,
+      minlength: 2,
     },
     attachments: {
       type: [commentAttachmentSchema],

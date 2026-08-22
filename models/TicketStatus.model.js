@@ -16,6 +16,10 @@ const ticketStatusSchema = new Schema(
       required: [true, "Status color is required"],
       match: [/^#([0-9A-Fa-f]{6})$/, "Color must be a valid hex code"],
     },
+    isDefault: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, versionKey: false },
 );
