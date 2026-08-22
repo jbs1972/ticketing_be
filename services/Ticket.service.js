@@ -38,7 +38,22 @@ const generateTicketCode = async () => {
 };
 
 exports.getAllTickets = async () => {
-  return await TicketModel.find();
+  return await TicketModel.aggregate([
+    {
+      $lookup: {
+        from: "comments",
+        localField: "ticketCode",
+        foreignField: "ticketCode",
+        as: "comments",
+      },
+    },
+    {
+      $addFields: {
+        commentCount: { $size: "$comments" },
+      },
+    },
+    { $project: { comments: 0 } },
+  ]);
 };
 
 exports.createTicket = async (ticket) => {
@@ -237,4 +252,54 @@ exports.ensureTicketCodes = async () => {
       `✅ Assigned ticket codes to ${legacyTickets.length} existing ticket(s)`,
     );
   }
+};
+
+exports.searchTickets = async ({ q, status, from, to }) => {
+  const matchConditions = [];
+
+  if (status) {
+    matchConditions.push({ status });
+  }
+
+  if (from || to) {
+    const dateFilter = {};
+    if (from) dateFilter.$gte = new Date(from);
+    if (to) dateFilter.$lte = new Date(to);
+    matchConditions.push({ createdAt: dateFilter });
+  }
+
+  if (q) {
+    const safeQuery = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(safeQuery, "i");
+
+    matchConditions.push({
+      $or: [
+        { subject: regex },
+        { description: regex },
+        { ticketCode: regex },
+        { "attachments.originalName": regex },
+        { "comments.message": regex },
+        { "comments.attachments.originalName": regex },
+      ],
+    });
+  }
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "comments",
+        localField: "ticketCode",
+        foreignField: "ticketCode",
+        as: "comments",
+      },
+    },
+  ];
+
+  if (matchConditions.length) {
+    pipeline.push({ $match: { $and: matchConditions } });
+  }
+
+  pipeline.push({ $project: { comments: 0 } });
+
+  return await TicketModel.aggregate(pipeline);
 };

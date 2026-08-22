@@ -6,7 +6,7 @@ const path = require("path");
 const uploadsRoot = path.join(__dirname, "..", "uploads", "tickets");
 
 exports.getCommentsByTicket = async (ticketCode) => {
-  return await CommentModel.find({ ticketCode }).sort({ createdAt: 1 });
+  return await CommentModel.find({ ticketCode }).sort({ createdAt: -1 });
 };
 
 exports.createComment = async (ticketCode, userId, message, files = []) => {
@@ -47,6 +47,90 @@ exports.createComment = async (ticketCode, userId, message, files = []) => {
   return comment;
 };
 
+exports.updateComment = async (
+  ticketCode,
+  commentId,
+  userId,
+  message,
+  files = [],
+) => {
+  const comment = await CommentModel.findOne({ _id: commentId, ticketCode });
+
+  if (!comment) {
+    const error = new Error("Comment not found");
+    error.status = 404;
+    throw error;
+  }
+
+  if (comment.authorId.toString() !== userId.toString()) {
+    const error = new Error("You can only edit your own comments.");
+    error.status = 403;
+    throw error;
+  }
+
+  comment.message = message;
+
+  if (files.length) {
+    const commentFolder = path.join(
+      uploadsRoot,
+      ticketCode,
+      "comments",
+      String(comment._id),
+    );
+
+    fs.mkdirSync(commentFolder, { recursive: true });
+
+    files.forEach((file) => {
+      const destination = path.join(commentFolder, file.filename);
+      fs.renameSync(file.path, destination);
+
+      comment.attachments.push({
+        originalName: file.originalname,
+        fileName: file.filename,
+        mimeType: file.mimetype,
+        size: file.size,
+      });
+    });
+  }
+
+  await comment.save();
+
+  return comment;
+};
+
+exports.deleteComment = async (ticketCode, commentId, userId) => {
+  const comment = await CommentModel.findOne({ _id: commentId, ticketCode });
+
+  if (!comment) {
+    const error = new Error("Comment not found");
+    error.status = 404;
+    throw error;
+  }
+
+  if (comment.authorId.toString() !== userId.toString()) {
+    const error = new Error("You can only delete your own comments.");
+    error.status = 403;
+    throw error;
+  }
+
+  if (comment.attachments.length) {
+    const commentFolder = path.join(
+      uploadsRoot,
+      ticketCode,
+      "comments",
+      String(comment._id),
+    );
+
+    if (fs.existsSync(commentFolder)) {
+      fs.rmSync(commentFolder, { recursive: true, force: true });
+    }
+  }
+
+  await comment.deleteOne();
+
+  return comment;
+};
+
 exports.getCommentAttachment = async (ticketCode, commentId, fileName) => {
   const comment = await CommentModel.findOne({ _id: commentId, ticketCode });
 
@@ -83,4 +167,76 @@ exports.getCommentAttachment = async (ticketCode, commentId, fileName) => {
 
 exports.deleteCommentsByTicket = async (ticketCode) => {
   await CommentModel.deleteMany({ ticketCode });
+};
+
+exports.deleteCommentAttachment = async (
+  ticketCode,
+  commentId,
+  fileName,
+  userId,
+) => {
+  const comment = await CommentModel.findOne({ _id: commentId, ticketCode });
+
+  if (!comment) {
+    const error = new Error("Comment not found");
+    error.status = 404;
+    throw error;
+  }
+
+  if (comment.authorId.toString() !== userId.toString()) {
+    const error = new Error("You can only delete your own attachments.");
+    error.status = 403;
+    throw error;
+  }
+
+  const attachment = comment.attachments.find((f) => f.fileName === fileName);
+
+  if (!attachment) {
+    const error = new Error("Attachment not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const filePath = path.join(
+    uploadsRoot,
+    ticketCode,
+    "comments",
+    String(comment._id),
+    fileName,
+  );
+
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+
+  comment.attachments = comment.attachments.filter(
+    (f) => f.fileName !== fileName,
+  );
+
+  await comment.save();
+
+  return comment;
+};
+
+exports.searchComments = async (ticketCode, { q, from, to }) => {
+  const conditions = { ticketCode };
+
+  if (from || to) {
+    conditions.createdAt = {};
+    if (from) conditions.createdAt.$gte = new Date(from);
+    if (to) conditions.createdAt.$lte = new Date(to);
+  }
+
+  if (q) {
+    const safeQuery = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(safeQuery, "i");
+
+    conditions.$or = [
+      { message: regex },
+      { authorName: regex },
+      { "attachments.originalName": regex },
+    ];
+  }
+
+  return await CommentModel.find(conditions).sort({ createdAt: -1 });
 };

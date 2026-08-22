@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  registrationDate: {
+    type: Date,
+    default: Date.now,
+  },
 });
 //Generate JWT Token
 userSchema.methods.getAuthToken = function (sessionId) {

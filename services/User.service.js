@@ -14,7 +14,6 @@ const assertCanAlterTarget = (requester, target) => {
 };
 
 exports.registerUser = async (userData, requester) => {
-
   let user = await User.findOne({ email: userData.email });
 
   if (user) {
@@ -54,7 +53,9 @@ exports.getUserById = async (id) => {
 };
 
 exports.getAllUsers = async () => {
-  return await User.find().select("name email role isActive").sort({ _id: 1 });
+  return await User.find()
+    .select("name email role isActive registrationDate")
+    .sort({ registrationDate: 1 });
 };
 
 exports.updateUserStatus = async (userId, isActive, requester) => {

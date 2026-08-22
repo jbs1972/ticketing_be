@@ -233,3 +233,18 @@ exports.deleteTicket = async (req, res) => {
     );
   }
 };
+
+exports.searchTickets = async (req, res) => {
+  try {
+    const { q, status, from, to } = req.query;
+    const tickets = await ticketService.searchTickets({ q, status, from, to });
+    sendSuccess(res, "Tickets fetched successfully", tickets, 200);
+  } catch (err) {
+    sendError(
+      res,
+      err.message || "Failed to search tickets",
+      null,
+      err.status || 500,
+    );
+  }
+};

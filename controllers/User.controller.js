@@ -15,7 +15,7 @@ exports.registerUser = async (req, res) => {
     return sendSuccess(
       res,
       "User registered successfully",
-      _.pick(user, ["_id", "name", "email", "role"]),
+      _.pick(user, ["_id", "name", "email", "role", "registrationDate"]),
       201,
     );
   } catch (err) {

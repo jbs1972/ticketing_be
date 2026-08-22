@@ -16,12 +16,17 @@ const {
   downloadAttachment,
   deleteAttachment,
   updateTicketStatus,
+  searchTickets,
 } = require("../controllers/Ticket.controller");
 
 const {
   getComments,
   createComment,
+  updateComment,
+  deleteComment,
   downloadCommentAttachment,
+  deleteCommentAttachment,
+  searchComments,
 } = require("../controllers/Comment.controller");
 
 const {
@@ -292,6 +297,10 @@ router
   .post(auth, admin, validateCreateTicketMiddleware, createTicket);
 
 router
+  .route("/search")
+  .get(auth, searchTickets);
+
+router
   .route("/:code")
   .get(auth, getTicketById)
   .put(auth, admin, validateUpdateTicketMiddleware, updateTicket)
@@ -315,7 +324,17 @@ router
   .post(auth, uploadAttachmentsMiddleware, createComment);
 
 router
+  .route("/:code/comments/search")
+  .get(auth, searchComments);
+
+router
+  .route("/:code/comments/:commentId")
+  .put(auth, uploadAttachmentsMiddleware, updateComment)
+  .delete(auth, deleteComment);
+
+router
   .route("/:code/comments/:commentId/attachments/:fileName")
-  .get(auth, downloadCommentAttachment);
+  .get(auth, downloadCommentAttachment)
+  .delete(auth, deleteCommentAttachment);
 
 module.exports = router;
