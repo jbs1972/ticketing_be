@@ -3,10 +3,11 @@ const CounterModel = require("../models/Counter.model");
 const fs = require("fs");
 const path = require("path");
 const commentService = require("./Comment.service");
+const { COMPANY_ID, PROJECT_ID } = require("../config/tenant.config");
 
 const uploadsRoot = path.join(__dirname, "..", "uploads", "tickets");
 
-const TICKET_CODE_REGEX = /^\d{6}$/;
+const TICKET_CODE_REGEX = /^\d{6,20}$/;
 
 const validateTicketCode = (code) => {
   if (!TICKET_CODE_REGEX.test(code)) {
@@ -16,25 +17,25 @@ const validateTicketCode = (code) => {
   }
 };
 
-// Atomically increments a shared counter to produce sequential codes (100001, 100002, ...)
+// Builds sequential ticket codes as CompanyID + ProjectID + sequence
+// (e.g. 101 + 101 + 1001 = 1011011001). The counter is scoped per company/project
+// so multiple tenants can share the same deployment later without colliding.
 const generateTicketCode = async () => {
+  const counterId = `ticketCode:${COMPANY_ID}:${PROJECT_ID}`;
+
   const counter = await CounterModel.findOneAndUpdate(
-    { _id: "ticketCode" },
+    { _id: counterId },
     { $inc: { seq: 1 } },
     { new: true },
   );
 
   if (counter) {
-    return counter.seq.toString();
+    return `${COMPANY_ID}${PROJECT_ID}${counter.seq}`;
   }
 
-  // Counter doesn't exist yet - create it so the schema default (100000) applies, then start at 100001
-  const newCounter = await CounterModel.create({
-    _id: "ticketCode",
-    seq: 100001,
-  });
+  const newCounter = await CounterModel.create({ _id: counterId, seq: 1001 });
 
-  return newCounter.seq.toString();
+  return `${COMPANY_ID}${PROJECT_ID}${newCounter.seq}`;
 };
 
 exports.getAllTickets = async () => {
@@ -264,7 +265,11 @@ exports.searchTickets = async ({ q, status, from, to }) => {
   if (from || to) {
     const dateFilter = {};
     if (from) dateFilter.$gte = new Date(from);
-    if (to) dateFilter.$lte = new Date(to);
+    if (to) {
+      const endOfDay = new Date(to);
+      endOfDay.setHours(23, 59, 59, 999);
+      dateFilter.$lte = endOfDay;
+    }
     matchConditions.push({ createdAt: dateFilter });
   }
 

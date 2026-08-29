@@ -37,6 +37,11 @@ const commentSchema = new Schema(
       type: [commentAttachmentSchema],
       default: [],
     },
+    mentions: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
   },
   { timestamps: true, versionKey: false },
 );

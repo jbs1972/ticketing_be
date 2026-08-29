@@ -140,3 +140,8 @@ exports.deleteUser = async (userId, requester) => {
 
   return user;
 };
+
+exports.getMentionableUsers = async () => {
+  return await User.find({ isActive: true }).select("_id name");
+};
+

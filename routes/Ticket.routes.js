@@ -27,6 +27,7 @@ const {
   downloadCommentAttachment,
   deleteCommentAttachment,
   searchComments,
+  getMyMentions,
 } = require("../controllers/Comment.controller");
 
 const {
@@ -301,6 +302,10 @@ router
   .get(auth, searchTickets);
 
 router
+  .route("/mentions/mine")
+  .get(auth, getMyMentions);
+
+router
   .route("/:code")
   .get(auth, getTicketById)
   .put(auth, admin, validateUpdateTicketMiddleware, updateTicket)
@@ -316,7 +321,9 @@ router
   .get(auth, downloadAttachment)
   .delete(auth, admin, deleteAttachment);
 
-router.route("/:code/status").patch(auth, admin, updateTicketStatus);
+router
+  .route("/:code/status")
+  .patch(auth, admin, updateTicketStatus);
 
 router
   .route("/:code/comments")

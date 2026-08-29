@@ -1,7 +1,15 @@
 const fs = require("fs");
 const commentService = require("../services/Comment.service");
 const { sendSuccess, sendError } = require("../utils/responseFormatter");
-const { emitTicketChanged } = require("../utils/socket");
+const { emitTicketChanged, emitToUser } = require("../utils/socket");
+const parseMentionsList = (raw) => {
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
 
 exports.getComments = async (req, res) => {
   try {
@@ -28,9 +36,20 @@ exports.createComment = async (req, res) => {
       req.user._id,
       req.body.message,
       req.files || [],
+      parseMentionsList(req.body.mentions),
     );
 
     emitTicketChanged(req.params.code, "commented", req.headers["x-socket-id"]);
+
+    (comment.mentions || [])
+      .filter((mentionedId) => String(mentionedId) !== String(req.user._id))
+      .forEach((mentionedId) => {
+        emitToUser(mentionedId, "comment:mentioned", {
+          ticketCode: req.params.code,
+          commentId: comment._id,
+          authorName: comment.authorName,
+        });
+      });
 
     sendSuccess(res, "Comment added successfully", comment, 201);
   } catch (err) {
@@ -61,6 +80,9 @@ exports.updateComment = async (req, res) => {
       req.user._id,
       req.body.message.trim(),
       req.files || [],
+      req.body.mentions !== undefined
+        ? parseMentionsList(req.body.mentions)
+        : null,
     );
 
     emitTicketChanged(req.params.code, "commented", req.headers["x-socket-id"]);
@@ -152,6 +174,20 @@ exports.searchComments = async (req, res) => {
     sendError(
       res,
       err.message || "Failed to search comments",
+      null,
+      err.status || 500,
+    );
+  }
+};
+
+exports.getMyMentions = async (req, res) => {
+  try {
+    const mentions = await commentService.getMentionsForUser(req.user._id);
+    sendSuccess(res, "Mentions fetched successfully", mentions, 200);
+  } catch (err) {
+    sendError(
+      res,
+      err.message || "Failed to fetch mentions",
       null,
       err.status || 500,
     );

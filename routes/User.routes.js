@@ -5,6 +5,7 @@ const {
   registerUser,
   getCurrentUser,
   getAllUsers,
+  getMentionableUsers,
   updateUserStatus,
   updateUserRole,
   updateUserName,
@@ -13,6 +14,23 @@ const {
 const { validate } = require("../models/User.model");
 
 const router = express.Router();
+
+
+/**
+ * @swagger
+ * /users/mentionable:
+ *   get:
+ *     summary: Get a lightweight list of users any authenticated user can @mention
+ *     tags: [Users]
+ *     security:
+ *       - TokenAuth: []
+ *     responses:
+ *       200:
+ *         description: Mentionable users fetched successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/mentionable", auth, getMentionableUsers);
 
 /**
  * @swagger

@@ -166,3 +166,18 @@ exports.deleteUser = async (req, res) => {
     return sendError(res, "Failed to delete user", err, 500);
   }
 };
+
+exports.getMentionableUsers = async (req, res) => {
+  try {
+    const users = await userService.getMentionableUsers();
+
+    return sendSuccess(
+      res,
+      "Mentionable users fetched successfully",
+      users,
+      200,
+    );
+  } catch (err) {
+    return sendError(res, "Failed to fetch mentionable users", err, 500);
+  }
+};

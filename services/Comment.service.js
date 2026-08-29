@@ -9,7 +9,13 @@ exports.getCommentsByTicket = async (ticketCode) => {
   return await CommentModel.find({ ticketCode }).sort({ createdAt: -1 });
 };
 
-exports.createComment = async (ticketCode, userId, message, files = []) => {
+exports.createComment = async (
+  ticketCode,
+  userId,
+  message,
+  files = [],
+  mentionedUserIds = [],
+) => {
   const user = await User.findById(userId).select("name");
 
   const comment = await CommentModel.create({
@@ -17,6 +23,7 @@ exports.createComment = async (ticketCode, userId, message, files = []) => {
     authorId: userId,
     authorName: user?.name || "Unknown",
     message,
+    mentions: mentionedUserIds,
   });
 
   if (files.length) {
@@ -53,6 +60,7 @@ exports.updateComment = async (
   userId,
   message,
   files = [],
+  mentionedUserIds = null,
 ) => {
   const comment = await CommentModel.findOne({ _id: commentId, ticketCode });
 
@@ -69,6 +77,10 @@ exports.updateComment = async (
   }
 
   comment.message = message;
+
+  if (mentionedUserIds !== null) {
+    comment.mentions = mentionedUserIds;
+  }
 
   if (files.length) {
     const commentFolder = path.join(
@@ -224,7 +236,11 @@ exports.searchComments = async (ticketCode, { q, from, to }) => {
   if (from || to) {
     conditions.createdAt = {};
     if (from) conditions.createdAt.$gte = new Date(from);
-    if (to) conditions.createdAt.$lte = new Date(to);
+    if (to) {
+      const endOfDay = new Date(to);
+      endOfDay.setHours(23, 59, 59, 999);
+      conditions.createdAt.$lte = endOfDay;
+    }
   }
 
   if (q) {
@@ -239,4 +255,21 @@ exports.searchComments = async (ticketCode, { q, from, to }) => {
   }
 
   return await CommentModel.find(conditions).sort({ createdAt: -1 });
+};
+
+exports.getMentionsForUser = async (userId) => {
+  const comments = await CommentModel.find({ mentions: userId })
+    .select("ticketCode")
+    .sort({ createdAt: -1 });
+
+  const mentionsByTicket = {};
+
+  comments.forEach((comment) => {
+    if (!mentionsByTicket[comment.ticketCode]) {
+      mentionsByTicket[comment.ticketCode] = [];
+    }
+    mentionsByTicket[comment.ticketCode].push(comment._id);
+  });
+
+  return mentionsByTicket;
 };

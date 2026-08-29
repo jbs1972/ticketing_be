@@ -41,7 +41,7 @@ const ticketSchema = new Schema(
       unique: true,
       sparse: true,
       minlength: 6,
-      maxlength: 6,
+      maxlength: 20,
     },
     description: {
       type: String,
