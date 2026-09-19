@@ -45,7 +45,8 @@ const options = {
           type: "apiKey",
           in: "header",
           name: "x-auth-token",
-          description: "JWT token for authentication. Send the token in the 'x-auth-token' header. Example: x-auth-token: {token}",
+          description:
+            "JWT token for authentication. Send the token in the 'x-auth-token' header. Example: x-auth-token: {token}",
         },
       },
 
@@ -76,16 +77,30 @@ const options = {
             },
             password: {
               type: "string",
-              description: "User password (min 6 chars, must contain uppercase, lowercase, number, and special char #$@)",
+              description:
+                "User password (min 6 chars, must contain uppercase, lowercase, number, and special char #$@)",
               minLength: 6,
               maxLength: 20,
               example: "Password123#",
             },
-            isAdmin: {
-              type: "boolean",
-              description: "Admin status",
-              default: false,
-              example: false,
+            role: {
+              type: "string",
+              enum: ["superadmin", "admin", "user"],
+              description:
+                "User role. superadmin is DB-seeded only and never assignable via API.",
+              default: "user",
+              example: "user",
+            },
+            company: {
+              type: "string",
+              description:
+                "Company ObjectId this user belongs to (absent for superadmin)",
+              example: "689ad54cb72e4c0012d91f22",
+            },
+            projects: {
+              type: "array",
+              items: { type: "string" },
+              description: "Project ObjectIds this user belongs to",
             },
           },
         },
@@ -147,16 +162,63 @@ const options = {
             },
             password: {
               type: "string",
-              description: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (#, @, or $)",
+              description:
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (#, @, or $)",
               minLength: 6,
               maxLength: 20,
               example: "Password123#",
             },
             isAdmin: {
               type: "boolean",
-              description: "Admin status (only admins can create users with this flag)",
+              description:
+                "Admin status (only admins can create users with this flag)",
               default: false,
               example: false,
+            },
+          },
+        },
+
+        UserRegisterRequest: {
+          type: "object",
+          required: ["name", "email", "password"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 5,
+              maxLength: 50,
+              example: "John Doe",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              example: "john@example.com",
+            },
+            password: {
+              type: "string",
+              description:
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (#, @, or $)",
+              minLength: 6,
+              maxLength: 20,
+              example: "Password123#",
+            },
+            role: {
+              type: "string",
+              enum: ["admin", "user"],
+              description:
+                "Role to assign. Company Admin can only assign within their own company; Super Admin must also supply company.",
+              default: "user",
+              example: "user",
+            },
+            company: {
+              type: "string",
+              description:
+                "Required when a Super Admin creates the user. Ignored (server-set) when a Company Admin creates the user.",
+              example: "689ad54cb72e4c0012d91f22",
+            },
+            projects: {
+              type: "array",
+              items: { type: "string" },
+              description: "Project ObjectIds to assign the user to",
             },
           },
         },
@@ -241,9 +303,7 @@ const options = {
 
         TicketCreateRequest: {
           type: "object",
-
-          required: ["subject", "description"],
-
+          required: ["subject", "description", "project"],
           properties: {
             subject: {
               type: "string",
@@ -260,8 +320,12 @@ const options = {
               minLength: 10,
               maxLength: 1000,
 
-              example:
-                "The production server is not responding since morning.",
+              example: "The production server is not responding since morning.",
+            },
+            project: {
+              type: "string",
+              description: "Project ObjectId this ticket belongs to",
+              example: "689ad54cb72e4c0012d91f33",
             },
           },
         },
@@ -378,6 +442,73 @@ const options = {
             },
           },
         },
+
+        Company: {
+          type: "object",
+          properties: {
+            _id: { type: "string", example: "689ad54cb72e4c0012d91f22" },
+            name: {
+              type: "string",
+              minLength: 2,
+              maxLength: 100,
+              example: "Acme Corp",
+            },
+            isActive: { type: "boolean", default: true, example: true },
+            createdDate: { type: "string", format: "date-time" },
+          },
+        },
+
+        CompanyCreateRequest: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 2,
+              maxLength: 100,
+              example: "Acme Corp",
+            },
+          },
+        },
+
+        Project: {
+          type: "object",
+          properties: {
+            _id: { type: "string", example: "689ad54cb72e4c0012d91f33" },
+            name: {
+              type: "string",
+              minLength: 2,
+              maxLength: 100,
+              example: "Website Redesign",
+            },
+            company: {
+              type: "string",
+              description: "Company ObjectId this project belongs to",
+              example: "689ad54cb72e4c0012d91f22",
+            },
+            isActive: { type: "boolean", default: true, example: true },
+            createdDate: { type: "string", format: "date-time" },
+          },
+        },
+
+        ProjectCreateRequest: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 2,
+              maxLength: 100,
+              example: "Website Redesign",
+            },
+            company: {
+              type: "string",
+              description:
+                "Required only when created by Super Admin; ignored (server-set) for Company Admin",
+              example: "689ad54cb72e4c0012d91f22",
+            },
+          },
+        },
       },
     },
 
@@ -397,6 +528,14 @@ const options = {
       {
         name: "Password Recovery",
         description: "OTP-based password recovery APIs",
+      },
+      {
+        name: "Companies",
+        description: "Company Management APIs (Super Admin only)",
+      },
+      {
+        name: "Projects",
+        description: "Project Management APIs",
       },
     ],
   },

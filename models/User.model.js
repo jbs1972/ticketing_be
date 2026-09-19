@@ -1,6 +1,6 @@
 const config = require("config");
 const jwt = require("jsonwebtoken");
-
+const { toTitleCase } = require("../utils/textNormalizer");
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
@@ -18,7 +18,7 @@ const passwordSchema = Joi.string()
     "any.required": "Password is required",
   });
 
-const ROLES = ["admin", "user"];
+const ROLES = ["superadmin", "admin", "user"];
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 50,
+    set: (v) => toTitleCase(v),
   },
   email: {
     type: String,
@@ -34,6 +35,7 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 255,
     unique: true,
+    set: (v) => v.trim().toLowerCase(),
   },
   password: {
     type: String,
@@ -46,6 +48,24 @@ const userSchema = new mongoose.Schema({
     enum: ROLES,
     default: "user",
   },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company",
+    required: function () {
+      return this.role !== "superadmin";
+    },
+  },
+  userCode: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  projects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+    },
+  ],
   isActive: {
     type: Boolean,
     default: true,
@@ -57,7 +77,7 @@ const userSchema = new mongoose.Schema({
 });
 //Generate JWT Token
 userSchema.methods.getAuthToken = function (sessionId) {
-  const payload = { _id: this._id, role: this.role };
+  const payload = { _id: this._id, role: this.role, company: this.company };
   // Include Session Id
   if (sessionId) payload.session_id = sessionId;
   const token = jwt.sign(payload, config.get("jwtPrivateKey"), {
@@ -74,6 +94,8 @@ function validateUser(user) {
     email: Joi.string().min(5).max(255).required().email(),
     password: passwordSchema,
     role: Joi.string().valid("admin", "user"),
+    company: Joi.string(),
+    projects: Joi.array().items(Joi.string()),
   });
 
   return schema.validate(user);
@@ -102,6 +124,15 @@ function validateName(body) {
 
   return schema.validate(body);
 }
+// Password Change Validation
+function validatePasswordChange(body) {
+  const schema = Joi.object({
+    currentPassword: Joi.string().required(),
+    newPassword: passwordSchema,
+  });
+
+  return schema.validate(body);
+}
 
 exports.User = User;
 exports.ROLES = ROLES;
@@ -109,3 +140,4 @@ exports.validate = validateUser;
 exports.validateStatus = validateStatus;
 exports.validateRole = validateRole;
 exports.validateName = validateName;
+exports.validatePasswordChange = validatePasswordChange;

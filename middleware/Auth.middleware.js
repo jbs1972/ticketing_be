@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const loginDetailsService = require("../services/LoginDetails.service");
 const { User } = require("../models/User.model");
+const { Company } = require("../models/Company.model");
 const { sendError } = require("../utils/responseFormatter");
 const { generateFingerprint } = require("../utils/fingerprint");
 
@@ -47,6 +48,22 @@ module.exports = async function (req, res, next) {
       }
 
       return sendError(res, "Session expired. Please login again.", null, 401);
+    }
+
+    // Freeze non-superadmins whose company has been deactivated
+    if (req.user.role !== "superadmin" && req.user.company) {
+      const company = await Company.findById(req.user.company).select(
+        "isActive",
+      );
+
+      if (company && company.isActive === false) {
+        return sendError(
+          res,
+          "Your company has been frozen. Please contact the Super Admin for assistance.",
+          null,
+          403,
+        );
+      }
     }
 
     // Validate Fingerprint

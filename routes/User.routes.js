@@ -10,11 +10,10 @@ const {
   updateUserRole,
   updateUserName,
   deleteUser,
+  changeOwnPassword,
 } = require("../controllers/User.controller");
 const { validate } = require("../models/User.model");
-
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -57,6 +56,38 @@ router.get("/me", auth, getCurrentUser);
 
 /**
  * @swagger
+ * /users/me/password:
+ *   patch:
+ *     summary: Change current authenticated user's own password
+ *     tags: [Users]
+ *     security:
+ *       - TokenAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Validation error or incorrect current password
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch("/me/password", auth, changeOwnPassword);
+
+/**
+ * @swagger
  * /users:
  *   get:
  *     summary: Get all users (Admin/Super Admin only)
@@ -75,7 +106,7 @@ router.get("/", auth, admin, getAllUsers);
  * @swagger
  * /users:
  *   post:
- *     summary: Create new user (Admin/Super Admin). Only Super Admin can set role=admin.
+ *     summary: Create new user (Admin/Super Admin, scoped to Admin's own company; Super Admin must specify company)
  *     tags: [Users]
  *     security:
  *       - TokenAuth: []

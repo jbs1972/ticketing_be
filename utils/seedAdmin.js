@@ -26,13 +26,13 @@ const seedAdmin = async () => {
       name,
       email,
       password: hashedPassword,
-      role: "admin",
+      role: "superadmin",
       isActive: true,
     });
 
-    console.log("✅ Initial Admin created");
+    console.log("✅ Initial Super Admin created");
   } catch (err) {
-    console.error("❌ Admin seeding failed:", err.message);
+    console.error("❌ Super Admin seeding failed:", err.message);
   }
 };
 

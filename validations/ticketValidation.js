@@ -13,6 +13,16 @@ const createTicketSchema = Joi.object({
     "string.min": "Description must be at least 2 characters long",
     "any.required": "Description is required",
   }),
+  project: Joi.string()
+    .required()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .messages({
+      "string.empty": "Project is required",
+      "any.required": "Project is required",
+      "string.pattern.base": "Project must be a valid ID",
+    }),
+
+  priority: Joi.string().trim().max(30).optional(),
 });
 
 // Joi schema for updating a ticket
@@ -24,7 +34,7 @@ const updateTicketSchema = Joi.object({
   description: Joi.string().min(2).trim().optional().messages({
     "string.min": "Description must be at least 2 characters long",
   }),
-  status: Joi.string().trim().optional(),
+  priority: Joi.string().trim().max(30).optional(),
 })
   .min(1)
   .messages({

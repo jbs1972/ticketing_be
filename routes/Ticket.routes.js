@@ -17,6 +17,7 @@ const {
   deleteAttachment,
   updateTicketStatus,
   searchTickets,
+  allocateTicket,
 } = require("../controllers/Ticket.controller");
 
 const {
@@ -323,7 +324,11 @@ router
 
 router
   .route("/:code/status")
-  .patch(auth, admin, updateTicketStatus);
+  .patch(auth, updateTicketStatus);
+
+router
+  .route("/:code/allocate")
+  .put(auth, admin, allocateTicket);
 
 router
   .route("/:code/comments")

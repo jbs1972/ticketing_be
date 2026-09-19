@@ -1,8 +1,8 @@
 const { sendError } = require("../utils/responseFormatter");
 
-// Grants access to Admin and Super Admin
+// Grants access to Super Admin only
 module.exports = function (req, res, next) {
-  if (req.user.role !== "admin" && req.user.role !== "superadmin") {
+  if (req.user.role !== "superadmin") {
     return sendError(res, "Access denied.", null, 403);
   }
 

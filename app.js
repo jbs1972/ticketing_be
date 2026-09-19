@@ -26,6 +26,10 @@ const seedAdmin = require("./utils/seedAdmin");
 
 const ticketStatusRoutes = require("./routes/TicketStatus.routes");
 const ticketStatusService = require("./services/TicketStatus.service");
+const companyRoutes = require("./routes/Company.routes");
+const projectRoutes = require("./routes/Project.routes");
+const ticketPriorityRoutes = require("./routes/TicketPriority.routes");
+const ticketPriorityService = require("./services/TicketPriority.service");
 
 const app = express();
 const server = http.createServer(app);
@@ -66,7 +70,8 @@ mongoose
 
     await seedAdmin();
     await ticketService.ensureTicketCodes();
-    await ticketStatusService.ensureDefaultStatuses();
+    await ticketStatusService.ensureAllCompaniesHaveStatuses();
+    await ticketPriorityService.ensureAllCompaniesHavePriorities();
   })
   .catch((error) => {
     console.error("❌ MongoDB Connection Failed");
@@ -111,6 +116,9 @@ app.use(`${config.apiPrefix}/users`, userRoutes);
 app.use(`${config.apiPrefix}/login-details`, loginDetailsRoutes);
 app.use(`${config.apiPrefix}/password-recovery`, passwordRecoveryRoutes);
 app.use(`${config.apiPrefix}/ticket-statuses`, ticketStatusRoutes);
+app.use(`${config.apiPrefix}/ticket-priorities`, ticketPriorityRoutes);
+app.use(`${config.apiPrefix}/companies`, companyRoutes);
+app.use(`${config.apiPrefix}/projects`, projectRoutes);
 
 // Swagger Documentation
 app.use(

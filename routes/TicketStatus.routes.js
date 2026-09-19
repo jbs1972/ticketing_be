@@ -7,14 +7,14 @@ const {
   createStatus,
   updateStatus,
   deleteStatus,
+  reorderStatuses,
 } = require("../controllers/TicketStatus.controller");
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(auth, getAllStatuses)
-  .post(auth, admin, createStatus);
+router.route("/").get(auth, getAllStatuses).post(auth, admin, createStatus);
+
+router.route("/reorder").put(auth, admin, reorderStatuses);
 
 router
   .route("/:id")

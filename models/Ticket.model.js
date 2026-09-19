@@ -43,6 +43,16 @@ const ticketSchema = new Schema(
       minlength: 6,
       maxlength: 20,
     },
+    company: {
+      type: Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
     description: {
       type: String,
       required: [true, "Description is required"],
@@ -61,6 +71,16 @@ const ticketSchema = new Schema(
     status: {
       type: String,
       default: "New",
+    },
+    priority: {
+      type: String,
+      default: "Normal",
+      trim: true,
+    },
+    allocatedUsers: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
     },
     attachments: {
       type: [attachmentSchema],
