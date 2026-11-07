@@ -42,6 +42,12 @@ exports.getAllStatuses = async (companyId) => {
   });
 };
 
+exports.getAllStatusesAcrossCompanies = async () => {
+  return await TicketStatusModel.find({})
+    .populate("company", "name")
+    .sort({ company: 1, sequence: 1 });
+};
+
 exports.getStatusById = async (id) => {
   return await TicketStatusModel.findById(id);
 };

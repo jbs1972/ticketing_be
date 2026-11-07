@@ -6,6 +6,7 @@ const { User } = require("../models/User.model");
 const fs = require("fs");
 const path = require("path");
 const commentService = require("./Comment.service");
+const userService = require("./User.service");
 
 const uploadsRoot = path.join(__dirname, "..", "uploads", "tickets");
 const TICKET_CODE_REGEX = /^\d{6,20}$/;
@@ -66,18 +67,49 @@ exports.getAllTickets = async (requester, companyId, projectId) => {
         commentCount: { $size: "$comments" },
       },
     },
-    { $project: { comments: 0 } },
+    {
+      $lookup: {
+        from: "companies",
+        localField: "company",
+        foreignField: "_id",
+        as: "companyInfo",
+      },
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "project",
+        foreignField: "_id",
+        as: "projectInfo",
+      },
+    },
+    {
+      $addFields: {
+        companyName: { $arrayElemAt: ["$companyInfo.name", 0] },
+        projectName: { $arrayElemAt: ["$projectInfo.name", 0] },
+      },
+    },
+    { $project: { comments: 0, companyInfo: 0, projectInfo: 0 } },
   ]);
 };
 
 exports.createTicket = async (ticket, project) => {
   const ticketCode = await generateTicketCode(project);
+  const adminIds = await userService.getAdminIdsForCompany(project.company._id);
   return await TicketModel.create({
     ...ticket,
     company: project.company._id,
     project: project._id,
     ticketCode,
+    allocatedUsers: adminIds,
   });
+};
+
+exports.addAdminToAllTickets = async (companyId, adminId) => {
+  await TicketModel.updateMany(
+    { company: companyId, allocatedUsers: { $ne: adminId } },
+    { $push: { allocatedUsers: adminId } },
+  );
 };
 
 exports.getTicketById = async (code) => {
@@ -120,12 +152,17 @@ exports.allocateTicket = async (code, userIds) => {
   if (!ticket) return null;
 
   const previous = ticket.allocatedUsers.map((u) => String(u));
-  const next = userIds.map((u) => String(u));
+  const adminIds = (
+    await userService.getAdminIdsForCompany(ticket.company)
+  ).map(String);
+  const next = Array.from(new Set([...userIds.map(String), ...adminIds]));
 
   // Feature 8: Comment Lock
   const commentCount = await CommentModel.countDocuments({ ticketCode: code });
   if (commentCount > 0) {
-    const removed = previous.filter((id) => !next.includes(id));
+    const removed = previous.filter(
+      (id) => !next.includes(id) && !adminIds.includes(id),
+    );
     if (removed.length > 0) {
       const error = new Error(
         "Cannot unallocate users from a ticket that has comments.",
@@ -139,7 +176,6 @@ exports.allocateTicket = async (code, userIds) => {
   const hadAllocation = previous.length > 0;
   const hasAllocation = next.length > 0;
 
-  // Feature 10: Updated Status Logic
   if (hasAllocation && ticket.status === "New") {
     ticket.status = "Allocate";
   } else if (hadAllocation && !hasAllocation && ticket.status === "Allocate") {
@@ -147,8 +183,6 @@ exports.allocateTicket = async (code, userIds) => {
   }
 
   await ticket.save();
-
-  // Feature 7: Removed implicit project access allocation
   return ticket;
 };
 
@@ -308,9 +342,31 @@ exports.searchTickets = async (
         as: "comments",
       },
     },
+    {
+      $lookup: {
+        from: "companies",
+        localField: "company",
+        foreignField: "_id",
+        as: "companyInfo",
+      },
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "project",
+        foreignField: "_id",
+        as: "projectInfo",
+      },
+    },
+    {
+      $addFields: {
+        companyName: { $arrayElemAt: ["$companyInfo.name", 0] },
+        projectName: { $arrayElemAt: ["$projectInfo.name", 0] },
+      },
+    },
   ];
   if (matchConditions.length)
     pipeline.push({ $match: { $and: matchConditions } });
-  pipeline.push({ $project: { comments: 0 } });
+  pipeline.push({ $project: { comments: 0, companyInfo: 0, projectInfo: 0 } });
   return await TicketModel.aggregate(pipeline);
 };

@@ -33,8 +33,9 @@ const handle = (res, err, fallback) => {
 exports.getAllStatuses = async (req, res) => {
   try {
     const companyId = resolveCompanyId(req, req.query.companyId);
-    if (!companyId) return sendError(res, "Select a company.", null, 400);
-    const statuses = await ticketStatusService.getAllStatuses(companyId);
+    const statuses = companyId
+      ? await ticketStatusService.getAllStatuses(companyId)
+      : await ticketStatusService.getAllStatusesAcrossCompanies();
     sendSuccess(res, "Statuses fetched successfully", statuses, 200);
   } catch (err) {
     handle(res, err, "Failed to fetch statuses");

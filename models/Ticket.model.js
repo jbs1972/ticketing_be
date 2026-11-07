@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { toCapitalCase } = require("../utils/textNormalizer");
 
 const attachmentSchema = new Schema(
   {
@@ -35,6 +36,7 @@ const ticketSchema = new Schema(
       minlength: [5, "Subject must be at least 5 characters long"],
       maxlength: [100, "Subject cannot exceed 100 characters"],
       trim: true,
+      set: (v) => toCapitalCase(v),
     },
     ticketCode: {
       type: String,

@@ -90,6 +90,20 @@ exports.registerUser = async (userData, requester) => {
   const salt = await bcrypt.genSalt(SALT_ROUNDS);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
+
+  if (user.role === "admin" && user.company) {
+    const { Project } = require("../models/Project.model");
+    const projects = await Project.find({ company: user.company }).select(
+      "_id",
+    );
+    if (projects.length) {
+      user.projects = projects.map((p) => p._id);
+      await user.save();
+      const ticketService = require("./Ticket.service");
+      await ticketService.addAdminToAllTickets(user.company, user._id);
+    }
+  }
+
   return user;
 };
 
@@ -108,6 +122,7 @@ exports.getAllUsers = async (requester, companyId) => {
     .select(
       "name email role isActive registrationDate company projects userCode",
     )
+    .populate("company", "name")
     .sort({ registrationDate: 1 });
 };
 
@@ -137,8 +152,24 @@ exports.updateUserRole = async (userId, role, requester) => {
     throw new Error("User not found.");
   }
   assertCanAlterTarget(requester, user);
+  const wasAdmin = user.role === "admin";
   user.role = role;
   await user.save();
+
+  if (role === "admin" && !wasAdmin && user.company) {
+    const { Project } = require("../models/Project.model");
+    const projects = await Project.find({ company: user.company }).select(
+      "_id",
+    );
+    const merged = new Set((user.projects || []).map(String));
+    projects.forEach((p) => merged.add(String(p._id)));
+    user.projects = Array.from(merged);
+    await user.save();
+
+    const ticketService = require("./Ticket.service");
+    await ticketService.addAdminToAllTickets(user.company, user._id);
+  }
+
   const activeSessions =
     await loginDetailsService.getActiveSessionsByUser(userId);
   await loginDetailsService.deactivatePreviousSessions(userId, "Admin Logout");
@@ -190,4 +221,11 @@ exports.changeOwnPassword = async (userId, currentPassword, newPassword) => {
   user.password = await bcrypt.hash(newPassword, salt);
   await user.save();
   return user;
+};
+
+exports.getAdminIdsForCompany = async (companyId) => {
+  const admins = await User.find({ company: companyId, role: "admin" }).select(
+    "_id",
+  );
+  return admins.map((a) => a._id);
 };

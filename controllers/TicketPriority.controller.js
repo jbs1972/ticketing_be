@@ -40,8 +40,9 @@ const handle = (res, err, fallback) => {
 exports.getAllPriorities = async (req, res) => {
   try {
     const companyId = resolveCompanyId(req, req.query.companyId);
-    if (!companyId) return sendError(res, "Select a company.", null, 400);
-    const priorities = await ticketPriorityService.getAllPriorities(companyId);
+    const priorities = companyId
+      ? await ticketPriorityService.getAllPriorities(companyId)
+      : await ticketPriorityService.getAllPrioritiesAcrossCompanies();
     sendSuccess(res, "Priorities fetched successfully", priorities, 200);
   } catch (err) {
     handle(res, err, "Failed to fetch priorities");

@@ -3,7 +3,7 @@ const TicketModel = require("../models/Ticket.model");
 const { Company } = require("../models/Company.model");
 const { toTitleCase } = require("../utils/textNormalizer");
 
-const DEFAULT_PRIORITIES = ["Default", "Normal"];
+const DEFAULT_PRIORITIES = ["Normal"];
 
 exports.ensureDefaultPriorities = async (companyId) => {
   const count = await TicketPriorityModel.countDocuments({
@@ -34,6 +34,12 @@ exports.getAllPriorities = async (companyId) => {
   return await TicketPriorityModel.find({ company: companyId }).sort({
     createdAt: 1,
   });
+};
+
+exports.getAllPrioritiesAcrossCompanies = async () => {
+  return await TicketPriorityModel.find({})
+    .populate("company", "name")
+    .sort({ company: 1, createdAt: 1 });
 };
 
 exports.createPriority = async (companyId, data) => {

@@ -1,8 +1,12 @@
+const mongoose = require("mongoose");
 const { Project } = require("../models/Project.model");
 const { Company } = require("../models/Company.model");
 const { User } = require("../models/User.model");
 const CounterModel = require("../models/Counter.model");
 const { toTitleCase } = require("../utils/textNormalizer");
+const userService = require("./User.service");
+const ticketService = require("./Ticket.service");
+const TicketModel = require("../models/Ticket.model");
 
 // Company-scoped sequential project IDs, starting at 1001
 const generateProjectId = async (companyObjectId) => {
@@ -37,17 +41,69 @@ exports.createProject = async (projectData, requester) => {
   const projectId = await generateProjectId(company);
   const project = new Project({ projectId, name: projectName, company });
   await project.save();
+
+  const adminIds = await userService.getAdminIdsForCompany(company);
+  if (adminIds.length) {
+    await User.updateMany(
+      { _id: { $in: adminIds }, projects: { $ne: project._id } },
+      { $push: { projects: project._id } },
+    );
+  }
+
   return project;
 };
 
 exports.getAllProjects = async (requester, companyId) => {
   const filter = {};
   if (requester.role === "admin") {
-    filter.company = requester.company;
+    filter.company = new mongoose.Types.ObjectId(requester.company);
   } else if (requester.role === "superadmin" && companyId) {
-    filter.company = companyId;
+    filter.company = new mongoose.Types.ObjectId(companyId);
   }
-  return await Project.find(filter).sort({ createdDate: 1 });
+  return await Project.aggregate([
+    ...(Object.keys(filter).length ? [{ $match: filter }] : []),
+    {
+      $lookup: {
+        from: "users",
+        let: { projectId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $in: ["$$projectId", { $ifNull: ["$projects", []] }] },
+                  { $eq: ["$role", "user"] },
+                  { $eq: ["$isActive", true] },
+                ],
+              },
+            },
+          },
+        ],
+        as: "members",
+      },
+    },
+    {
+      $lookup: {
+        from: "companies",
+        localField: "company",
+        foreignField: "_id",
+        as: "companyInfo",
+      },
+    },
+    {
+      $addFields: {
+        memberCount: { $size: "$members" },
+        company: {
+          $let: {
+            vars: { c: { $arrayElemAt: ["$companyInfo", 0] } },
+            in: { _id: "$$c._id", name: "$$c.name" },
+          },
+        },
+      },
+    },
+    { $project: { members: 0, companyInfo: 0 } },
+    { $sort: { createdDate: 1 } },
+  ]);
 };
 
 exports.getProjectById = async (id, requester) => {
@@ -80,6 +136,14 @@ exports.updateProjectStatus = async (id, isActive, requester) => {
 
 exports.deleteProject = async (id, requester) => {
   const project = await exports.getProjectById(id, requester);
+
+  const projectTickets = await TicketModel.find({ project: id }).select(
+    "ticketCode",
+  );
+  for (const ticket of projectTickets) {
+    await ticketService.deleteTicket(ticket.ticketCode);
+  }
+
   await project.deleteOne();
   return project;
 };
@@ -101,7 +165,7 @@ exports.isUserAssignedToProject = async (userId, projectId) => {
 
 exports.assignUsersToProject = async (projectId, userIds, requester) => {
   const project = await exports.getProjectById(projectId, requester);
-  const currentUsers = await User.find({ projects: projectId });
+  const currentUsers = await User.find({ projects: projectId, role: "user" });
   const toRemove = currentUsers.filter((u) => !userIds.includes(String(u._id)));
   for (const user of toRemove) {
     user.projects = user.projects.filter(
@@ -110,7 +174,7 @@ exports.assignUsersToProject = async (projectId, userIds, requester) => {
     await user.save();
   }
   await User.updateMany(
-    { _id: { $in: userIds }, projects: { $ne: projectId } },
+    { _id: { $in: userIds }, role: "user", projects: { $ne: projectId } },
     { $push: { projects: projectId } },
   );
   return project;

@@ -39,7 +39,7 @@ exports.createCompany = async (companyData) => {
   const lowerName = companyData.name.trim().toLowerCase();
   const capitalName = toTitleCase(companyData.name);
   const salt = await bcrypt.genSalt(SALT_ROUNDS);
-  const hashedPassword = await bcrypt.hash(`${capitalName}#@dmin1234`, salt);
+  const hashedPassword = await bcrypt.hash(`${capitalName}.admin@1234`, salt);
 
   await User.create({
     name: `${capitalName} Admin`,
